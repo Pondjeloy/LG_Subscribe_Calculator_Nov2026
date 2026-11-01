@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LG Subscribe Calculator build 2026.11.01-v4 · โปรพฤศจิกายน 2569 · ใบเสนอราคาใช้ฟอนต์เดียวกับเครื่องคิดเลข -->
+<!-- LG Subscribe Calculator build 2026.11.01-v5 · โปรพฤศจิกายน 2569 · ใบเสนอราคาใช้ฟอนต์เดียวกับเครื่องคิดเลข -->
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
@@ -1905,7 +1905,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.01-v4',
+ buildVersion: '2026.11.01-v5',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -2718,6 +2718,12 @@ function lgCalculator() {
  {label:'จัดส่ง Pre-Carbon Block Filter', freq:'ทุก 6 เดือน'},
  {label:'จัดส่ง UF Membrane Filter', freq:'ทุก 12 เดือน'}
  ], note:'LG จัดส่งอะไหล่ให้ ลูกค้าเปลี่ยนเองที่บ้าน'},
+ ws523s: { title:'บริการดูแลเครื่องกรองน้ำ S1 Refresh – WS523S (Visit)', items:[
+ {label:'บริการฆ่าเชื้อตามทางเดินน้ำด้วยไฟฟ้า', freq:'ทุก 4 เดือน'},
+ {label:'ตรวจสอบการรั่วไหลของผลิตภัณฑ์', freq:'ทุก 4 เดือน'},
+ {label:'ทำความสะอาดในจุดที่เข้าถึงยาก', freq:'ทุก 4 เดือน'},
+ {label:'ทำความสะอาดทั้งภายในและภายนอก', freq:'ทุก 4 เดือน'}
+ ], note:'ช่างผู้เชี่ยวชาญบริการถึงบ้านทุก 4 เดือน ลูกค้าไม่ต้องดำเนินการเอง'},
  ws510: { title:'บริการดูแลเครื่องกรองน้ำ Slim Stand – WS510', items:[
  {label:'ฆ่าเชื้อตามทางเดินน้ำด้วยไฟฟ้า', freq:'ทุก 3 เดือน'},
  {label:'ตรวจสอบการรั่วไหล', freq:'ทุก 3 เดือน'},
@@ -4555,7 +4561,7 @@ function lgCalculator() {
  const st = item.serviceType.toLowerCase();
  let info = null;
  if (cat === 'เครื่องกรองน้ำ') {
- info = item.code.includes('WS510') ? this.serviceInfo['เครื่องกรองน้ำ'].ws510 : this.serviceInfo['เครื่องกรองน้ำ'][st];
+ info = item.code.includes('WS523S') ? this.serviceInfo['เครื่องกรองน้ำ'].ws523s : item.code.includes('WS510') ? this.serviceInfo['เครื่องกรองน้ำ'].ws510 : this.serviceInfo['เครื่องกรองน้ำ'][st];
  } else if (cat.startsWith('ตู้เย็น')) {
  info = (item.code.includes('X24') || item.code.includes('L24') || item.code.includes('X257CMHW'))
  ? this.serviceInfo['ตู้เย็น'].plumbing : this.serviceInfo['ตู้เย็น'].visit;
@@ -4650,6 +4656,7 @@ function lgCalculator() {
 
    // เครื่องกรองน้ำ
    if (cat === 'เครื่องกรองน้ำ') {
+     if (code.includes('WS523S')) return null; // ยังไม่มีสไลด์ Care Service 4 เดือน
      if (code.includes('WS510')) return { page: '04', dual: false, only: 'Visit' };
      return { page: '03', dual: true }; // WD516 / WD518 / WD110
    }
