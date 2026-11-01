@@ -3700,7 +3700,11 @@ function lgCalculator() {
  const partsPerYear = it.serviceType === 'Self'
  ? (cycle.includes('6') ? 2 : 1)
  : 0;
+ // รุ่น+บริการ+รอบเดียวกัน → รวมเป็นบรรทัดเดียว (นับจำนวนเครื่อง)
+ const dup = benefitsPerYear.find(b => b.code === it.code && b.serviceType === it.serviceType && b.cycle === it.serviceCycle);
+ if (dup) { dup.qty += 1; return; }
  benefitsPerYear.push({
+ qty: 1,
  code: it.code,
  name: it.name,
  category: it.category,
@@ -3921,14 +3925,21 @@ function lgCalculator() {
  },
  // รวมรุ่น+สัญญาเดียวกันสำหรับแสดงสรุป (ยอดคูณจำนวน)
  firstPaymentBreakdownGrouped() {
- return this.quoteGroupedItems().map(({ item: it, qty }) => {
- const advance = (it.advancePayment || 0) * qty;
+ // รุ่นเดียวกัน + ยอดงวดแรกเท่ากัน (โปรเดียวกัน แม้คนละสัญญา 5Y/7Y) → รวมเป็นบรรทัดเดียว
+ const merged = new Map();
+ this.quoteGroupedItems().forEach(({ item: it, qty }) => {
  const skipBill1 = it.outright || (it.advancePayment || 0) > 0;
  const bill1One = skipBill1 ? 0 : (this.itemComboSchedule(it).bills.find(b => b.bill === 1)?.price || 0);
- const bill1 = bill1One * qty;
- const total = this.itemFirstPayment(it) * qty;
- return { item: it, advance, bill1, total, qty };
+ const totalOne = this.itemFirstPayment(it);
+ const k = [it.code, it.outright ? 1 : 0, it.advancePayment || 0, bill1One, totalOne].join('|');
+ if (!merged.has(k)) merged.set(k, { item: it, advance: 0, bill1: 0, total: 0, qty: 0 });
+ const r = merged.get(k);
+ r.advance += (it.advancePayment || 0) * qty;
+ r.bill1 += bill1One * qty;
+ r.total += totalOne * qty;
+ r.qty += qty;
  });
+ return Array.from(merged.values());
  },
  outrightItemsGrouped() {
  return this.quoteGroupedItems().filter(g => g.item.outright);
@@ -4856,7 +4867,7 @@ function lgCalculator() {
         } else {
           benefit = 'รับประกันตลอดสัญญา · ซ่อมฟรีเมื่อมีปัญหา';
         }
-        h += '<div class="av-item"><span class="av-check"></span><span><strong>' + b.code + '</strong> — ' + benefit + '</span></div>';
+        h += '<div class="av-item"><span class="av-check"></span><span><strong>' + b.code + '</strong>' + (b.qty > 1 ? ' ×' + b.qty + ' เครื่อง' : '') + ' — ' + benefit + (b.qty > 1 ? ' (ต่อเครื่อง)' : '') + '</span></div>';
       });
       h += '<div class="av-item"><span class="av-check"></span><span><strong>รับประกันสินค้าตลอด ' + ann.years + ' ปี</strong> · ไม่ต้องจ่ายค่าซ่อมเพิ่ม</span></div>';
       h += '</div>';
