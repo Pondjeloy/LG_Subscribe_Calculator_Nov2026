@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LG Subscribe Calculator build 2026.11.01-v6 · โปรพฤศจิกายน 2569 · ใบเสนอราคาใช้ฟอนต์เดียวกับเครื่องคิดเลข -->
+<!-- LG Subscribe Calculator build 2026.11.01-v7 · โปรพฤศจิกายน 2569 · ใบเสนอราคาใช้ฟอนต์เดียวกับเครื่องคิดเลข -->
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
@@ -1734,7 +1734,7 @@ function lgCalculator() {
  dateStart: '2569-11-01', dateEnd: '2569-11-30',
  newTiers: [ {min:2, rate:10} ],
  existTiers: [ {min:1, rate:10} ],
- waterRate: 10
+ waterRate: 0
  },
  // SUBSCRIBE DAY Special Deal 31 ต.ค.–11 พ.ย. 2569 (Halloween Day) · ใหม่ 2+ / เดิม 1+ ลด 15% · คอมโบ November Special 10% (ใหม่ 2+ / เดิม 1+) ใช้ 12–30 พ.ย. 2569
  special: {
@@ -1744,7 +1744,7 @@ function lgCalculator() {
  note: 'Halloween Day · ใหม่ 2+ / เดิม 1+ ลด 15% · 31 ต.ค. – 11 พ.ย. 2569',
  newTiers: [ {min:2, rate:15} ],
  existTiers: [ {min:1, rate:15} ],
- waterRate: 15
+ waterRate: 0
  },
  // 9.9 Surprise Deal — จบ 11 ก.ย. 2569 · catalog กลับบิลแรก 149 ตามโปรเดือน
  eventPromo: {
@@ -1905,7 +1905,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.01-v6',
+ buildVersion: '2026.11.01-v7',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -3179,7 +3179,7 @@ function lgCalculator() {
  dateStart: '2569-11-01', dateEnd: '2569-11-30',
  newTiers: [ {min:2, rate:10} ],
  existTiers: [ {min:1, rate:10} ],
- waterRate: 10
+ waterRate: 0
  },
  special: {
  name: 'SUBSCRIBE DAY Special Deal 15%',
@@ -3188,7 +3188,7 @@ function lgCalculator() {
  note: 'Halloween Day · ใหม่ 2+ / เดิม 1+ ลด 15% · 31 ต.ค. – 11 พ.ย. 2569',
  newTiers: [ {min:2, rate:15} ],
  existTiers: [ {min:1, rate:15} ],
- waterRate: 15
+ waterRate: 0
  },
  eventPromo: {
  name: '9.9 Surprise Deal',
