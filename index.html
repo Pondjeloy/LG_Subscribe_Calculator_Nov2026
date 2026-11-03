@@ -1906,7 +1906,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.03-v2',
+ buildVersion: '2026.11.03-v3',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5398,7 +5398,7 @@ function lgCalculator() {
      + '<h3>ราคาไส้กรองหลังสิ้นสุดสัญญา</h3>'
      + '<p class="filter-reference-subtitle">LG Subscribe · ' + (hasWs ? 'WS523S' : 'เครื่องกรองน้ำ PuriCare') + ' | ราคาอ้างอิงเฉพาะไส้กรอง</p>'
      + '<div class="filter-reference-grid"' + (filters.length < 4 ? ' style="grid-template-columns:repeat(' + filters.length + ',minmax(0,1fr));max-width:' + filters.length * 25 + '%"' : '') + '>' + cards + '</div>'
-     + '<div class="filter-reference-total">รวมครบ ' + filters.length + ' ชิ้น <strong>' + this.fmtMoney(filters.reduce((sum, f) => sum + f.price, 0)) + ' บาท</strong></div>'
+     + '<div class="filter-reference-total"' + (filters.length < 4 ? ' style="max-width:' + filters.length * 25 + '%"' : '') + '>รวมครบ ' + filters.length + ' ชิ้น <strong>' + this.fmtMoney(filters.reduce((sum, f) => sum + f.price, 0)) + ' บาท</strong></div>'
      + '<p class="filter-reference-note">ราคาไส้กรองไม่รวมในยอดใบเสนอราคา ไส้กรองแต่ละชนิดเปลี่ยนคนละรอบ ไม่จำเป็นต้องเปลี่ยนพร้อมกันทุกชิ้น</p>'
      + '<p class="filter-reference-note">เป็นราคาเฉพาะไส้กรอง ไม่รวมค่าช่างและค่าบริการอื่น ๆ หากมี โปรดตรวจสอบกับ LG ก่อนรับบริการ ราคาอาจเปลี่ยนแปลง ณ วันที่รับบริการ รอบเปลี่ยนขึ้นอยู่กับการใช้งานและคุณภาพน้ำ</p></section>';
  },
