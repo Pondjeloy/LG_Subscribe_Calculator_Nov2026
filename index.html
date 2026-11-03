@@ -1906,7 +1906,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.02-v5',
+ buildVersion: '2026.11.03-v1',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5923,13 +5923,13 @@ function lgCalculator() {
     .care-slides.is-dense .care-slides-grid.cols-multi .care-slide-img { max-height: 100px; }
     .sign .box { min-height: 52px; }
   }
-  .wm { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 9999; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .wm span { transform: rotate(-30deg); white-space: nowrap; text-align: center; font-family: 'Plus Jakarta Sans', 'IBM Plex Sans Thai', Arial, sans-serif; font-weight: 800; font-size: 64px; letter-spacing: 3px; line-height: 1.15; color: rgba(120,120,120,0.16); }
-  .wm span small { display: block; font-size: 44px; letter-spacing: 6px; }
+  .items-wrap { position: relative; container-type: inline-size; }
+  .wm { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 20; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .wm span { transform: rotate(-30deg); white-space: nowrap; text-align: center; font-family: 'Plus Jakarta Sans', 'IBM Plex Sans Thai', Arial, sans-serif; font-weight: 800; font-size: 64px; font-size: min(64px, 10cqw); letter-spacing: 0.05em; line-height: 1.15; color: rgba(120,120,120,0.18); }
+  .wm span small { display: block; font-size: 0.7em; letter-spacing: 0.1em; }
 ${'</'+'style>'}
 </head>
 <body>
-  <div class="wm" aria-hidden="true"><span>E-PROMOTER<small>LG SUBSCRIBE</small></span></div>
   <div class="no-print">
     <button onclick="lgFitQuoteToA4();window.print()">พิมพ์ / บันทึก PDF</button>
     <button class="ghost" onclick="window.close()">ปิดหน้าต่าง</button>
@@ -5959,6 +5959,7 @@ ${'</'+'style>'}
 
     ${custBlock}
 
+    <div class="items-wrap">
     <table class="items">
       <thead>
         <tr>
@@ -5974,6 +5975,8 @@ ${'</'+'style>'}
       </thead>
       <tbody>${itemsHtml}</tbody>
     </table>
+    <div class="wm" aria-hidden="true"><span>E-PROMOTER<small>LG SUBSCRIBE</small></span></div>
+    </div>
 
     <div class="bottom">
       <div class="quote-left">
