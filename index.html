@@ -1906,7 +1906,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.03-v4',
+ buildVersion: '2026.11.03-v5',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5550,7 +5550,7 @@ function lgCalculator() {
           // ลำโพง/ซาวด์บาร์: งวดที่เงินล่วงหน้าครอบแล้ว (ครึ่งราคา) ไม่ใช่ส่วนลด
           // งวดครึ่งราคาที่ยังไม่ได้จ่ายล่วงหน้า (เช่น 7–12 เมื่อล่วงหน้า 6 เดือน) ยังคิดส่วนลดจากราคาปกติ
           // ทีวี/มอนิเตอร์ใช้สูตรเดิม
-          const soundbarAdvance = it.category === 'ลำโพง / ซาวด์บาร์' && advance > 0;
+          const soundbarAdvance = advance > 0; // ทุกสินค้า Advance: งวดที่เงินล่วงหน้าครอบ (ครึ่งราคา 50%) ไม่นับเป็นส่วนลด
           const prepaidMonths = soundbarAdvance ? this.advancePrepaidMonths(it) : 0;
           const catalogBaseByBill = soundbarAdvance
             ? this.itemComboSchedule(it).bills.reduce((map, b) => {
