@@ -1906,7 +1906,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.03-v5',
+ buildVersion: '2026.11.03-v6',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5573,7 +5573,7 @@ function lgCalculator() {
             };
             const crossesPrepaid = soundbarAdvance && r.isAdvanceHalf && prepaidMonths > 0
               && r.start <= prepaidMonths && r.end > prepaidMonths;
-            const prepaidOnly = soundbarAdvance && r.isAdvanceHalf && prepaidMonths > 0
+            const prepaidOnly = soundbarAdvance && prepaidMonths > 0
               && r.end <= prepaidMonths;
             if (crossesPrepaid) {
               const structural = catalogBaseByBill[r.start] || promoOne;
