@@ -3668,6 +3668,7 @@ function lgCalculator() {
  const per = {};
  this.cart.forEach(item => {
  if (item.outright) return;
+ if (/^MD19/.test(String(item.code || ''))) return; // MD19: ไม่นับ/ไม่เตือนเพดาน 6,000 (user 4 พ.ย. 2569)
  this.itemComboSchedule(item).bills.forEach(b => { per[b.bill] = (per[b.bill] || 0) + b.price; });
  });
  let peak = 0, at = 0;
