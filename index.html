@@ -4674,7 +4674,7 @@ function lgCalculator() {
 
    // เครื่องกรองน้ำ
    if (cat === 'เครื่องกรองน้ำ') {
-     if (code.includes('WS523S')) return null; // ยังไม่มีสไลด์ Care Service 4 เดือน
+     if (code.includes('WS523S')) return { page: '03n', dual: false, only: 'Visit' }; // PuriCare Objet รุ่นใหม่ · Visit ทุก 4 เดือน
      if (code.includes('WS510')) return { page: '04', dual: false, only: 'Visit' };
      return { page: '03', dual: true }; // WD516 / WD518 / WD110
    }
