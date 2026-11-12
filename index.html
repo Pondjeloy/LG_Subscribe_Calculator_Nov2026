@@ -892,7 +892,7 @@
  </div>
  </section>
 
- <!-- SUBSCRIBE DAY Special Deal 31 ต.ค.–11 พ.ย. 2569 · ใหม่ 2+ / เดิม 1+ 15% -->
+ <!-- SUBSCRIBE DAY Special Deal 31 ต.ค.–15 พ.ย. 2569 (ต่อโปรตาม user 12 พ.ย.) · ใหม่ 2+ / เดิม 1+ 15% -->
  <section class="special-combo-banner" :class="(specialCombo && hasSpecialComboConfigured()) ? 'active' : ''">
  <div class="special-combo-glow"></div>
  <div style="position:relative;z-index:2">
@@ -1736,12 +1736,12 @@ function lgCalculator() {
  existTiers: [ {min:1, rate:10} ],
  waterRate: 0
  },
- // SUBSCRIBE DAY Special Deal 31 ต.ค.–11 พ.ย. 2569 (Halloween Day) · ใหม่ 2+ / เดิม 1+ ลด 15% · คอมโบ November Special 10% (ใหม่ 2+ / เดิม 1+) ใช้ 12–30 พ.ย. 2569
+ // SUBSCRIBE DAY Special Deal 31 ต.ค.–15 พ.ย. 2569 (ต่อจาก 11 พ.ย. ตาม user 12 พ.ย.) · ใหม่ 2+ / เดิม 1+ ลด 15% · คอมโบ November Special 10% (ใหม่ 2+ / เดิม 1+) ใช้ 16–30 พ.ย. 2569
  special: {
  name: 'SUBSCRIBE DAY Special Deal 15%',
  dateStart: '2569-10-31',
- dateEnd: '2569-11-11',
- note: 'Halloween Day · ใหม่ 2+ / เดิม 1+ ลด 15% · 31 ต.ค. – 11 พ.ย. 2569',
+ dateEnd: '2569-11-15',
+ note: 'Halloween Day · ใหม่ 2+ / เดิม 1+ ลด 15% · 31 ต.ค. – 15 พ.ย. 2569',
  newTiers: [ {min:2, rate:15} ],
  existTiers: [ {min:1, rate:15} ],
  waterRate: 0
@@ -1906,7 +1906,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.10-v1',
+ buildVersion: '2026.11.12-v1',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -3196,8 +3196,8 @@ function lgCalculator() {
  special: {
  name: 'SUBSCRIBE DAY Special Deal 15%',
  dateStart: '2569-10-31',
- dateEnd: '2569-11-11',
- note: 'Halloween Day · ใหม่ 2+ / เดิม 1+ ลด 15% · 31 ต.ค. – 11 พ.ย. 2569',
+ dateEnd: '2569-11-15',
+ note: 'Halloween Day · ใหม่ 2+ / เดิม 1+ ลด 15% · 31 ต.ค. – 15 พ.ย. 2569',
  newTiers: [ {min:2, rate:15} ],
  existTiers: [ {min:1, rate:15} ],
  waterRate: 0
