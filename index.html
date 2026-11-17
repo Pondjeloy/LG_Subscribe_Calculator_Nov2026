@@ -1911,7 +1911,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.17-v4',
+ buildVersion: '2026.11.17-v5',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5447,7 +5447,7 @@ function lgCalculator() {
          + '<div class="consumable-meta"><strong>' + this.fmtMoney(f.price) + ' บาท/ชิ้น</strong>'
          + (f.months ? ' · ทุก ' + f.months + ' เดือน' : '') + '</div></div></div>').join('')
        + '</div></div>').join('')
-     + '<p class="filter-reference-note">ราคาอ้างอิงเฉพาะอะไหล่ ไม่รวมค่าบริการและยอดใบเสนอราคา · ราคาและรอบเปลี่ยนอาจเปลี่ยนตามการใช้งาน</p></section>';
+     + '<p class="filter-reference-note">ราคาอ้างอิงเฉพาะอะไหล่ จาก https://www.lg.com ราคาอาจมีการเปลี่ยนแปลง</p></section>';
  },
     quoteRemarkHtml(titleTh) {
       const esc = (s) => String(s == null ? '' : s)
