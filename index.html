@@ -1911,7 +1911,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.17-v3',
+ buildVersion: '2026.11.17-v4',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5437,8 +5437,8 @@ function lgCalculator() {
    const groups = this.quoteFilterReferenceGroups();
    if (!groups.length) return '';
    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-   return '<section class="filter-reference" aria-label="อะไหล่ไส้กรอง">'
-     + '<h3>อะไหล่ไส้กรอง</h3>'
+   return '<section class="filter-reference" aria-label="อะไหล่ไส้กรองหลังจากหมดสัญญา">'
+     + '<h3>อะไหล่ไส้กรองหลังจากหมดสัญญา</h3>'
      + groups.map(g => '<div class="consumable-group" data-product-code="' + esc(g.code) + '">'
        + '<h4>รายการ ' + g.number + ' · ' + esc(g.model) + '</h4>'
        + '<div class="consumable-grid' + (g.filters.length === 1 ? ' single' : '') + '">'
