@@ -1696,6 +1696,11 @@
  </li>
  <li x-show="cart.length === 0 || cartHasSubscribeItem()">โปรโมชั่นใช้ได้เฉพาะแบบ Subscribe</li>
  <li x-show="cart.length > 0">ราคารวมค่าจัดส่งและค่าติดตั้งเบื้องต้นเรียบร้อยแล้ว (พื้นที่มาตรฐานตามบริษัท)</li>
+ <li x-show="cartRemarkGiftLines().length">
+ <template x-for="(line, gi) in cartRemarkGiftLines()" :key="'gift-remark-' + gi">
+ <div x-text="line"></div>
+ </template>
+ </li>
  <li>
  <template x-for="(line, ri) in racAs35GiftLines()" :key="'rac-as35-' + ri">
  <div x-text="line"></div>
@@ -1906,7 +1911,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.17-v2',
+ buildVersion: '2026.11.17-v3',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -4461,8 +4466,24 @@ function lgCalculator() {
    if (!item) return '';
    return String(item.name || '').trim();
  },
+ // ของแถมแผ่นกรอง (Allergen Filter) — ไม่ระบุรับประกัน ไม่โชว์ใต้สินค้า · ขึ้นช่องหมายเหตุแทน (user 17 พ.ย. 2569)
+ isRemarkOnlyGift(text) {
+   return /Allergen\s*Filter|PFPAEA01|PFPCEA01/i.test(String(text || ''));
+ },
+ cartRemarkGiftLines() {
+   const seen = {};
+   const out = [];
+   (this.cart || []).forEach((it) => {
+     const g = String((it && it.freeGift) || '').trim();
+     if (!this.isRemarkOnlyGift(g)) return;
+     const line = String(it.code || '').split('.')[0] + ': ' + this.freeGiftPhrase(g);
+     if (!seen[line]) { seen[line] = 1; out.push(line); }
+   });
+   return out;
+ },
  hasFreeGift(item) {
    if (!item) return false;
+   if (this.isRemarkOnlyGift(this.freeGiftLabel(item))) return false;
    if (this.freeGiftLabel(item)) return true;
    const t = String(item.promo || '') + ' ' + String(item.name || '');
    // ต้องเป็นของแถมชัดเจน — อย่าจับแค่คำว่า "แถม" ลอยๆ (เช่น ซื้อ 2 แถม Aero)
@@ -5379,6 +5400,7 @@ function lgCalculator() {
         ? ('โปร ' + (String((promo && promo.name) || '').trim() || 'พิเศษ'))
         : 'โปรเดือนปกติ';
       if (start && end) items.push({ type: 'text', text: label + ' เริ่ม ' + start + ' หมด ' + end });
+      this.cartRemarkGiftLines().forEach((text) => items.push({ type: 'text', text }));
       if (this.cartHasRacAs35Gift()) items.push({ type: 'block', lines: this.racAs35GiftLines() });
       if (!this.quotePayOnce) {
         this.advanceComboRemarkLines().forEach((text) => items.push({ type: 'text', text }));
@@ -5415,8 +5437,8 @@ function lgCalculator() {
    const groups = this.quoteFilterReferenceGroups();
    if (!groups.length) return '';
    const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-   return '<section class="filter-reference" aria-label="อะไหล่สิ้นเปลืองหลังสิ้นสุดสัญญา">'
-     + '<h3>อะไหล่สิ้นเปลืองหลังสิ้นสุดสัญญา</h3>'
+   return '<section class="filter-reference" aria-label="อะไหล่ไส้กรอง">'
+     + '<h3>อะไหล่ไส้กรอง</h3>'
      + groups.map(g => '<div class="consumable-group" data-product-code="' + esc(g.code) + '">'
        + '<h4>รายการ ' + g.number + ' · ' + esc(g.model) + '</h4>'
        + '<div class="consumable-grid' + (g.filters.length === 1 ? ' single' : '') + '">'
