@@ -1911,7 +1911,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.18-v10',
+ buildVersion: '2026.11.18-v11',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -5434,7 +5434,8 @@ function lgCalculator() {
      else if (/^MD19/.test(code)) filters = [md19Filter, md19Tank];
      else if (/^WT(?:2116|2520)/.test(code)) filters = [wtDryerFilter, aromaSheet];
      else if (/^WT1410/.test(code)) filters = [wt1410DryerFilter, aromaSheet];
-     else if (/^WT/.test(code) || /^R[VX]10/.test(code)) filters = [aromaSheet];
+     else if (/^R[VX]10/.test(code)) filters = [wt1410DryerFilter, aromaSheet];
+     else if (/^WT/.test(code)) filters = [aromaSheet];
      else {
        const ref = airFilters.find(f => f.models.some(prefix => code.startsWith(prefix)));
        if (ref) filters = [{ ...ref, name: ref.models[0] === 'AS25' ? 'HEPA Filter' : 'ไส้กรอง PuriCare 360°' }];
