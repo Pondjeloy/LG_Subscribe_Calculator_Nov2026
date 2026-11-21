@@ -1741,14 +1741,14 @@ function lgCalculator() {
  existTiers: [ {min:1, rate:10} ],
  waterRate: 0
  },
- // SUBSCRIBE DAY Special Deal 15% จบแล้ว (31 ต.ค.–15 พ.ย. 2569 · user แจ้งหมด 16 พ.ย.) → ล้าง special · ใช้ November Special Combo 10% (ใหม่ 2+ / เดิม 1+) ถึง 30 พ.ย. 2569
+ // SUBSCRIBE DAY 15% รอบ 2 (โค้งสุดท้าย) 21–29 พ.ย. 2569 · user แจ้ง 21 พ.ย. · ใหม่ 2+ / เดิม 1+ · 30 พ.ย. กลับ November Special Combo 10%
  special: {
- name: '',
- dateStart: '',
- dateEnd: '',
- note: '',
- newTiers: [ {min:2, rate:0} ],
- existTiers: [ {min:1, rate:0} ],
+ name: 'SUBSCRIBE DAY Special Deal 15%',
+ dateStart: '2569-11-21',
+ dateEnd: '2569-11-29',
+ note: 'โค้งสุดท้าย · ใหม่ 2+ / เดิม 1+ ลด 15% · 21 – 29 พ.ย. 2569',
+ newTiers: [ {min:2, rate:15} ],
+ existTiers: [ {min:1, rate:15} ],
  waterRate: 0
  },
  // 9.9 Surprise Deal — จบ 11 ก.ย. 2569 · catalog กลับบิลแรก 149 ตามโปรเดือน
@@ -1911,7 +1911,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.18-v11',
+ buildVersion: '2026.11.21-v1',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -3199,12 +3199,12 @@ function lgCalculator() {
  waterRate: 0
  },
  special: {
- name: '',
- dateStart: '',
- dateEnd: '',
- note: '',
- newTiers: [ {min:2, rate:0} ],
- existTiers: [ {min:1, rate:0} ],
+ name: 'SUBSCRIBE DAY Special Deal 15%',
+ dateStart: '2569-11-21',
+ dateEnd: '2569-11-29',
+ note: 'โค้งสุดท้าย · ใหม่ 2+ / เดิม 1+ ลด 15% · 21 – 29 พ.ย. 2569',
+ newTiers: [ {min:2, rate:15} ],
+ existTiers: [ {min:1, rate:15} ],
  waterRate: 0
  },
  eventPromo: {
