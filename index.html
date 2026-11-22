@@ -1426,7 +1426,7 @@
   <div class="rd-tiles" x-show="picker.category || rdQuery.trim()">
    <template x-for="t in rdTiles()" :key="'rt-' + t.cat + '-' + t.idx">
     <button type="button" class="rd-tile" :aria-pressed="picker.category === t.cat && String(picker.model) === t.idx" @click="rdPickModel(t.idx, t.cat)">
-     <span class="rd-tile-img"><img :src="t.img" alt="" loading="lazy" x-show="t.img" /></span>
+     <span class="rd-tile-img"><img :src="t.img" alt="" loading="lazy" x-show="t.img" @error="if (!$el.dataset.fb) { $el.dataset.fb = '1'; $el.src = $el.src.replace('/products-fit/', '/products/'); }" /></span>
      <span class="rd-tile-cat" x-show="rdQuery.trim()" x-text="categoryDisplayName(t.cat)"></span>
      <span class="rd-tile-code" x-text="t.code"></span>
      <span class="rd-tile-name" x-text="t.name"></span>
@@ -1439,7 +1439,7 @@
 
  <section class="card rd-stage" id="rd-stage" x-show="hasModelSelected()">
   <div class="rd-stage-top">
-   <div class="rd-stage-img"><img :src="rdFit(modelImage())" :alt="currentModel()?.name || ''" x-show="modelImage()" /></div>
+   <div class="rd-stage-img"><img :src="rdFit(modelImage())" :alt="currentModel()?.name || ''" x-show="modelImage()" @error="if (!$el.dataset.fb) { $el.dataset.fb = '1'; $el.src = $el.src.replace('/products-fit/', '/products/'); }" /></div>
    <div class="rd-stage-meta">
     <div class="rd-stage-cat" x-text="categoryDisplayName(picker.category)"></div>
     <h2 class="rd-stage-code" x-text="String(currentModel()?.code || '').split('.')[0]"></h2>
@@ -2293,7 +2293,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.22-v1',
+ buildVersion: '2026.11.22-v2',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
