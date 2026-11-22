@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- LG Subscribe Calculator build 2026.11.01-v8 · โปรพฤศจิกายน 2569 · ใบเสนอราคาใช้ฟอนต์เดียวกับเครื่องคิดเลข -->
+<!-- LG Subscribe Calculator build 2026.11.22-v1 (redesign: product tiles, iOS UI, value-sorted cart) · โปรพฤศจิกายน 2569 · ใบเสนอราคาใช้ฟอนต์เดียวกับเครื่องคิดเลข -->
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
@@ -768,29 +768,457 @@
   .app-footer-inner{padding:14px 22px 28px;text-align:center}
   .app-footer-ver{font-family:ui-monospace,'JetBrains Mono',monospace;font-size:11px;color:#a1a1a6;letter-spacing:.04em}
 </style>
+<style id="redesign-2026">
+  /* ===== Redesign 2026 =====================================================
+     Override layer on the original calculator. Original fonts kept.
+     Colours: the calculator's original blood red #C8102E / #A50034 on white. */
+  :root{
+    /* original theme: white, charcoal, blood red #C8102E / #A50034 */
+    --brand:#C8102E; --brand-dark:#A50034; --brand-soft:#FBEDEF;
+    --bg:#F5F5F5; --bg-soft:#FAFAFA; --surface:#FFFFFF;
+    --fill:#F3F3F3; --fill-2:#E9E9E9;
+    --ink:#1F1F1F; --black:#1F1F1F; --ink-2:#3D3D3D;
+    --muted:#6B6C6B; --muted-2:#8A8B8A;
+    --line:rgba(0,0,0,.09); --line-strong:rgba(0,0,0,.16);
+    --blood:#C8102E; --blood-dark:#A50034; --accent:#C8102E; --lg-red:#C8102E; --lg-red-dark:#A50034;
+    --blood-soft:rgba(200,16,46,.07); --blood-mid:rgba(200,16,46,.13);
+    --lg-ink:#1F1F1F; --lg-muted:#6B6C6B; --lg-line:#E3E3E3; --lg-bg:#F5F5F5; --lg-bg-soft:#FAFAFA;
+    --lcd:#2B2B2B; --lcd-2:#383838; --lcd-text:#FFFFFF; --lcd-muted:#C4C4C4; --lcd-line:rgba(255,255,255,.14);
+    --radius:22px; --radius-sm:14px; --radius-xs:10px;
+    --shadow-sm:none; --shadow-md:0 1px 3px rgba(0,0,0,.06); --shadow-lg:0 8px 28px rgba(0,0,0,.10);
+  }
+  html,body{background:var(--bg)}
+  :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+  /* header */
+  header{background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
+  header .inner{height:60px}
+  .lg-badge{background:var(--ink);border-radius:10px;font-weight:600}
+  header .font-display{font-size:20px;font-weight:600}
+
+  /* panels */
+  .card{background:var(--surface);border:0;border-radius:var(--radius);box-shadow:var(--shadow-md)}
+  .card::before{display:none}
+  .card:hover{box-shadow:var(--shadow-md);transform:none}
+  .section-num{font-weight:500;color:var(--muted);background:var(--fill);border-radius:8px;padding:2px 8px;font-size:13px}
+  h2.font-display{font-weight:600}
+
+  /* inputs + buttons */
+  select,input[type=text],input[type=number]{background:var(--fill);border:1px solid transparent;border-radius:12px;color:var(--ink)}
+  select:focus,input:focus{background:#fff;border-color:var(--ink);box-shadow:0 0 0 3px rgba(23,32,51,.08)}
+  .btn-primary{background:var(--ink);color:#fff;border-radius:999px;box-shadow:none;font-weight:500}
+  .btn-primary:hover:not(:disabled){background:var(--brand-dark)!important;transform:none;box-shadow:none}
+  .btn-primary:disabled{background:#B9C2CC;color:#fff;opacity:1}
+  .btn-ghost{background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);border-radius:999px}
+  .btn-ghost:hover{background:var(--fill)}
+  .qty-stepper{background:var(--fill);border:0;border-radius:999px}
+  .qty-stepper .qty-val{font-weight:600}
+
+  /* choice cards */
+  .radio-card,.plan-card{background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;box-shadow:none}
+  .radio-card:hover,.plan-card:hover{border-color:var(--ink-2);box-shadow:none;transform:none}
+  .radio-card.active,.plan-card.active{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:#FAFAFA}
+  .plan-card.active::after{background:var(--ink)}
+  .plan-card.active .pp-price,.price-highlight{color:var(--blood)}
+  .plan-cycle-group.framed{border-radius:18px;border-color:var(--line)}
+  .washer-rec-tip{background:#FDF3F2;border:0;border-left:3px solid var(--ink);border-radius:10px;color:var(--ink-2)}
+  .category-product-img{background:#fff;border-radius:18px}
+
+  /* tags */
+  .tag{border-radius:999px;font-weight:500}
+  .tag-promo{background:var(--blood-soft);color:var(--blood)}
+  .tag-recommend{background:var(--ink);color:#fff}
+  .tag-visit{background:#F1F1F1;color:#3D3D3D}
+  .tag-self{background:var(--fill);color:var(--ink-2)}
+
+  /* cart rows */
+  .cart-item{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:none}
+  .cart-item:hover{border-color:var(--line-strong);box-shadow:none}
+  .empty-state{background:var(--fill);border:1px dashed var(--line-strong);border-radius:16px}
+
+  /* bill schedule tiles */
+  .bill-schedule-card{border-radius:18px;border-color:var(--line)}
+  .bill-step{background:var(--fill);border:0;border-radius:12px}
+  .bill-step-price{font-size:22px;font-weight:600}
+  .bill-step:first-child .bill-step-price{color:var(--blood)}
+
+  /* ---------- dark readout panels: promo banners + grand total ---------- */
+  .special-combo-banner.active,.promo-card-on,.shock-88-banner,.summary-grand-box{
+    --ink:var(--lcd-text); --ink-2:#C2DCD6; --muted:var(--lcd-muted); --line:var(--lcd-line);
+    background:var(--lcd)!important;color:var(--lcd-text);border:0!important;border-radius:var(--radius);
+    box-shadow:none!important}
+  .special-combo-banner.active::after,.special-combo-glow,.special-fire{display:none!important}
+  .special-combo-banner.active .special-rate-card{background:var(--lcd-2)!important;border:1px solid var(--lcd-line)!important;border-radius:14px}
+  .special-combo-banner.active{background:var(--brand)!important;--muted:rgba(255,255,255,.85);--ink-2:#fff}
+  .special-combo-banner.active .special-rate-card{background:rgba(255,255,255,.14)!important;border-color:rgba(255,255,255,.28)!important}
+  .special-combo-banner.active .special-rate-card strong{color:#fff}
+  .special-combo-banner.active .special-settings-btn{background:transparent;border:1px solid var(--lcd-line);color:var(--lcd-text)}
+  .special-combo-banner.active .special-toggle input:checked + .special-toggle-slider{background:rgba(0,0,0,.28)}
+  .promo-card-on .promo-period-label{color:var(--lcd-muted);letter-spacing:0;text-transform:none;font-family:inherit}
+  .summary-grand-box *{border-color:var(--lcd-line)}
+  .summary-grand-box [x-text*="'฿'"],.summary-grand-box .font-mono{color:var(--lcd-text)}
+
+  /* first payment box: the one red moment */
+  .summary-first-pay-box{background:#fff;border:1px solid var(--blood)!important;border-radius:18px;box-shadow:none}
+
+  /* misc boxes in the summary column */
+  .summary-plain-box,.annual-value-box,.bill-range-box{border-radius:16px;border-color:var(--line)!important;box-shadow:none}
+  .compare-table th{background:var(--fill)}
+  .compare-table tr.cp-best{background:#FDF3F2}
+  details summary{border-radius:12px}
+
+  @media (max-width:640px){
+    html,body{font-size:15px}
+    .card{border-radius:18px}
+    .p-6{padding:18px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* ---- win over the legacy !important theme block ---- */
+  .btn-primary{background:var(--brand)!important;color:#fff!important}
+  .btn-primary:disabled{background:#B9C2CC!important}
+  .lg-badge{background:var(--brand)!important}
+  .section-num{color:var(--muted)!important;font-weight:500}
+  .radio-card.active,.plan-card.active{border-color:var(--brand)!important;background:var(--brand-soft)!important;box-shadow:inset 0 0 0 1px var(--brand)!important}
+  .plan-card.active::after{background:var(--brand)!important}
+  .compare-table .cp-btn,.cp-select-btn{background:var(--ink)!important}
+  .compare-table tr.cp-selected{box-shadow:inset 3px 0 0 var(--ink);background:#FDF3F2}
+  .compare-table tr.cp-best{background:#FDF3F2}
+  .compare-table tr.cp-best td.cp-label .cp-pkg-line::after,.compare-table .cp-badge-rec{background:var(--ink)!important}
+  .bill-range-box .br-grand,.bill-range-box .br-grand *{background:var(--lcd)!important;color:var(--lcd-text)!important}
+  .bill-range-box .br-grand{border-radius:14px}
+
+  /* plain summary: replace rainbow inline colours with the system */
+  .summary-plain-box{background:var(--surface)!important;border:1px solid var(--line)!important}
+  .summary-plain-box strong{color:var(--ink)!important}
+  .summary-plain-box [style*="#7c3aed"],.summary-plain-box [style*="#6d28d9"],.summary-plain-box [style*="#5b21b6"],
+  .summary-plain-box [style*="#3730a3"],.summary-plain-box [style*="#166534"],.summary-plain-box [style*="#15803d"],
+  .summary-plain-box [style*="#92400e"]{color:var(--ink-2)!important}
+  .summary-plain-box [style*="#a50034"],.summary-plain-box [style*="#991b1b"],.summary-plain-box [style*="#7a0026"]{color:var(--blood)!important}
+  .summary-plain-box [style*="background"]{background:var(--fill)!important}
+  .summary-plain-box [style*="border"]{border-color:var(--line)!important}
+  .summary-plain-box [style*="#c4b5fd"],.summary-plain-box [style*="#fca5a5"]{border:1px solid var(--line-strong)!important}
+
+  /* ===================== layout redesign (rd-*) ===================== */
+  [x-cloak]{display:none!important}
+  /* top bar: brand + the two switches that used to be full sections */
+  header.rd-top{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .rd-top-inner{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+  .rd-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .rd-brand-name{font-size:19px;font-weight:600;line-height:1.2}
+  .rd-brand-sub{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46ch}
+  .rd-switches{display:flex;gap:10px;flex-wrap:wrap}
+  .rd-seg{display:inline-flex;background:var(--fill);border-radius:12px;padding:4px;gap:2px}
+  .rd-seg button{border:0;background:none;padding:8px 16px;border-radius:9px;font:inherit;font-size:15px;color:var(--muted);cursor:pointer}
+  .rd-seg button[aria-pressed=true]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+
+  /* promo banner becomes a slim strip */
+  .special-combo-banner{padding:18px 22px!important;margin:0!important}
+  .special-combo-banner .special-combo-rates{margin-top:12px}
+
+  /* product browser */
+  .rd-browser{padding:24px}
+  .rd-browser-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .rd-browser-head h2,.rd-stage h2.rd-stage-code{font-size:22px;font-weight:600;line-height:1.2}
+  .rd-search input{width:240px;max-width:100%;padding:9px 14px}
+  .rd-cats{display:flex;gap:8px;flex-wrap:wrap}
+  .rd-cat{border:1px solid var(--line-strong);background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;color:var(--ink-2);cursor:pointer}
+  .rd-cat:hover{border-color:var(--ink-2)}
+  .rd-cat[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+  .rd-hint{color:var(--muted);font-size:14px;margin-top:14px}
+  .rd-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}
+  .rd-tile{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;cursor:pointer;font:inherit;color:inherit;min-width:0}
+  .rd-tile:hover{border-color:var(--line-strong);background:#FAFBFC}
+  .rd-tile[aria-pressed=true]{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:var(--brand-soft)}
+  .rd-tile-img{width:100%;aspect-ratio:1/1;display:block;background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+  .rd-tile-img img{display:block;width:100%;height:100%;object-fit:contain;padding:6px}
+  .rd-tile-code{font-weight:600;font-size:14px;line-height:1.3;word-break:break-all}
+  .rd-tile-name{font-size:12.5px;color:var(--muted);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .rd-tile-from{margin-top:6px;font-size:12px;color:var(--muted)}
+  .rd-tile-from b{font-size:16px;color:var(--ink);font-weight:600}
+
+  /* selected product stage */
+  .rd-stage{padding:24px;scroll-margin-top:84px}
+  .rd-stage-top{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;margin-bottom:20px}
+  .rd-stage-img{aspect-ratio:1/1;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .rd-stage-img img{display:block;width:100%;height:100%;object-fit:contain;padding:8px}
+  .rd-stage-cat{font-size:13px;color:var(--muted)}
+  .rd-stage-name{color:var(--ink-2);font-size:15px;margin-top:4px;max-width:60ch}
+  .rd-stage .plan-cycle-group .space-y-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+  .rd-stage .plan-cycle-group .space-y-2>*+*{margin-top:0}
+  .plan-card{padding:14px 16px}
+  .qty-add-row{border-top:1px solid var(--line);padding-top:16px;margin-top:18px}
+
+  /* cart: drop the old step number, keep the title */
+  .rd-left>section.card .section-num{display:none}
+
+  /* schedule/care tabs + summary tabs */
+  .rd-details{padding:20px 24px 24px}
+  .rd-details>div>section.card{box-shadow:none;padding:16px 0 0!important;background:transparent}
+  .rd-details>div>section.card .section-num,.rd-details>div>section.card h2{display:none}
+  .rd-tabs{display:flex;gap:4px;background:var(--fill);border-radius:12px;padding:4px;margin-bottom:6px;overflow-x:auto}
+  .rd-tabs button{flex:1;white-space:nowrap;border:0;background:none;border-radius:9px;padding:9px 12px;font:inherit;font-size:14.5px;color:var(--muted);cursor:pointer}
+  .rd-tabs button[aria-selected=true]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .rd-tabs-wrap{margin-top:16px}
+  .rd-tabs-wrap>.bill-range-box,.rd-tabs-wrap>.annual-value-box,.rd-tabs-wrap>.summary-plain-box{margin-top:10px}
+
+  /* receipt column: first payment + bill strip form one dark readout */
+  .rd-receipt{padding:22px!important}
+  .rd-receipt-title{display:flex;justify-content:space-between;align-items:baseline;font-size:20px;font-weight:600;margin-bottom:14px}
+  .rd-receipt-title span{font-size:14px;color:var(--muted);font-weight:400}
+  .rd-receipt .summary-first-pay-box{background:var(--brand)!important;border:0!important;color:var(--lcd-text);padding:18px 18px 14px;
+    border-radius:18px!important;
+    --ink:#fff;--ink-2:#fff;--muted:rgba(255,255,255,.85)}
+  .rd-receipt .summary-first-pay-box .text-gray-600,.rd-receipt .summary-first-pay-box .text-xs{color:rgba(255,255,255,.85)!important}
+  .rd-receipt .summary-first-pay-box .price-highlight{color:#fff!important;font-size:44px!important;line-height:1.1;font-weight:500}
+  .rd-receipt .summary-first-pay-box .font-mono,.rd-receipt .summary-first-pay-box .font-mono *{color:#fff!important}
+  .rd-receipt .summary-first-pay-box [style*="border-top"]{border-top-color:rgba(255,255,255,.3)!important}
+  .summary-promo-box,.summary-yellow-box,.summary-green-box,.summary-advance-box{background:var(--fill)!important;border:0!important;border-radius:14px!important}
+
+  .rd-grid>*{min-width:0}
+  @media (max-width:1023px){.rd-grid{grid-template-columns:minmax(0,1fr)!important}}
+
+  /* mobile summary bar */
+  .rd-mbar{display:none}
+  @media (max-width:1023px){
+    .rd-mbar{display:flex;position:fixed;left:10px;right:10px;bottom:10px;z-index:50;background:var(--brand);color:var(--lcd-text);border-radius:18px;padding:10px 10px 10px 16px;gap:14px;align-items:center;box-shadow:0 10px 30px rgba(165,0,52,.35)}
+    .rd-mbar>div{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+    .rd-mbar span{font-size:11.5px;color:rgba(255,255,255,.85)}
+    .rd-mbar b{font-size:19px;font-weight:600}
+    .rd-mbar-btn{margin-left:auto;background:#fff;color:var(--ink);text-decoration:none;font-weight:600;padding:10px 16px;border-radius:12px;white-space:nowrap}
+    body{padding-bottom:84px}
+    .rd-receipt{scroll-margin-top:80px}
+  }
+  @media (max-width:640px){
+    .rd-top-inner{padding-top:8px;padding-bottom:8px}
+    .rd-brand-sub{max-width:28ch}
+    .rd-switches{width:100%}
+    .rd-seg{flex:1}.rd-seg button{flex:1;padding:8px 6px}
+    .rd-browser,.rd-stage,.rd-details{padding:18px}
+    .rd-cats{flex-wrap:nowrap;overflow-x:auto;margin:0 -18px;padding:0 18px 4px;scrollbar-width:none}
+    .rd-cat{white-space:nowrap}
+    .rd-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .rd-stage-top{grid-template-columns:110px 1fr;gap:14px}
+    .rd-stage .plan-cycle-group .space-y-2{grid-template-columns:1fr}
+    .rd-search,.rd-search input{width:100%}
+  }
+
+  /* combo settings panel inside the red banner: back to dark text on white */
+  .special-combo-banner .combo-settings{
+    --ink:#1F1F1F;--ink-2:#3D3D3D;--muted:#6B6C6B;--line:rgba(0,0,0,.09);--line-strong:rgba(0,0,0,.16);--fill:#F3F3F3;--fill-2:#E9E9E9;
+    background:rgba(255,255,255,.16)!important;border:0!important;color:#1F1F1F}
+  .special-combo-banner .combo-settings-block{background:#fff!important;color:#1F1F1F}
+  .special-combo-banner .combo-settings-block *{color:inherit}
+  .special-combo-banner .combo-settings-block .combo-set-label,.special-combo-banner .combo-settings-block .combo-tier-label{color:#6B6C6B!important}
+  .special-combo-banner .combo-settings-block .font-semibold{color:#1F1F1F!important}
+  .special-combo-banner .combo-set-input,.special-combo-banner .combo-tier-num{color:#1F1F1F!important;background:#F3F3F3!important}
+  .special-combo-banner .combo-btn-save{background:#fff!important;color:var(--brand)!important}
+  .special-combo-banner .combo-btn-reset{background:transparent!important;border:1px solid rgba(255,255,255,.7)!important;color:#fff!important}
+
+  /* top bar in logo red */
+  header.rd-top{background:var(--brand)!important;border-bottom:0;color:#fff}
+  header.rd-top .lg-badge{background:#fff!important;color:var(--brand)!important;box-shadow:none}
+  .rd-brand-name{color:#fff}
+  .rd-brand-sub{color:rgba(255,255,255,.85)}
+  header.rd-top .rd-seg{background:rgba(0,0,0,.16)}
+  header.rd-top .rd-seg button{color:rgba(255,255,255,.88)}
+  header.rd-top .rd-seg button[aria-pressed=true]{background:#fff;color:var(--brand);box-shadow:none}
+  header.rd-top :focus-visible{outline-color:#fff}
+  /* banner sits right under a red bar: give it a darker red so the two read apart */
+  .special-combo-banner.active{background:linear-gradient(135deg,#A50034,#7A0026)!important}
+
+  /* search across all products */
+  .rd-search input{width:300px}
+  .rd-tile-cat{font-size:11.5px;color:var(--brand);font-weight:600;line-height:1.3}
+  .special-combo-banner .combo-tier-row{flex-wrap:nowrap;gap:6px}
+  .special-combo-banner .combo-tier-num{width:64px!important;flex:0 0 64px;padding:6px!important;border-radius:8px!important}
+  /* package cards in one row share the same height */
+  .rd-stage .plan-cycle-group .space-y-2>label{display:flex}
+  .rd-stage .plan-cycle-group .space-y-2>label>.plan-card{flex:1}
+  /* brand mark: big white LG, no badge box */
+  header.rd-top .lg-badge{background:transparent!important;color:#fff!important;width:auto;height:auto;border-radius:0;font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1;padding:0}
+
+  /* ===================== iOS-style finish (latest iOS: glass, capsules, depth) ===================== */
+  :root{
+    --ios-fill:rgba(118,118,128,.12);
+    --ios-fill-2:rgba(118,118,128,.20);
+    --ios-sep:rgba(60,60,67,.12);
+    --ios-glass:rgba(255,255,255,.72);
+    --ios-shadow:0 1px 1px rgba(0,0,0,.03),0 8px 24px rgba(0,0,0,.06);
+    --ios-shadow-lift:0 2px 4px rgba(0,0,0,.05),0 14px 34px rgba(0,0,0,.10);
+    --ios-ease:cubic-bezier(.32,.72,0,1);
+    --red-deep:#7A0026; --red-mid:#A50034; --red:#C8102E; --red-light:#E2445C;
+  }
+  html,body{background:#F2F2F7}
+  body{-webkit-tap-highlight-color:transparent}
+
+  /* cards: large continuous corners, hairline, soft depth */
+  .card{border-radius:26px!important;box-shadow:var(--ios-shadow)!important;border:.5px solid rgba(0,0,0,.04)!important}
+
+  /* ---------- top bar: red with glass controls ---------- */
+  header.rd-top{background:linear-gradient(180deg,rgba(200,16,46,.97),rgba(184,12,44,.97))!important;
+    -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+    box-shadow:0 .5px 0 rgba(0,0,0,.12)}
+  header.rd-top .rd-seg{background:rgba(255,255,255,.16);border-radius:999px;padding:3px;
+    box-shadow:inset 0 0 0 .5px rgba(255,255,255,.28)}
+  header.rd-top .rd-seg button{border-radius:999px;padding:7px 18px;font-weight:500;transition:background .35s var(--ios-ease),color .35s var(--ios-ease)}
+  header.rd-top .rd-seg button[aria-pressed=true]{background:#fff;color:var(--red);font-weight:600;
+    box-shadow:0 3px 8px rgba(0,0,0,.18),0 .5px 0 rgba(0,0,0,.04)}
+
+  /* ---------- promo banner: same red as the top bar, dark (left) to light (right) ---------- */
+  .special-combo-banner.active,.special-combo-banner{
+    background:linear-gradient(90deg,var(--red-deep) 0%,var(--red-mid) 38%,var(--red) 70%,var(--red-light) 100%)!important;
+    border-radius:26px!important;box-shadow:0 10px 30px rgba(165,0,52,.25)!important;color:#fff;
+    --ink:#fff;--ink-2:#fff;--muted:rgba(255,255,255,.82)}
+  .special-combo-banner .special-rate-card{background:rgba(255,255,255,.14)!important;
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border:.5px solid rgba(255,255,255,.32)!important;border-radius:18px!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+  .special-combo-banner .special-settings-btn{background:rgba(255,255,255,.18)!important;border:.5px solid rgba(255,255,255,.4)!important;
+    color:#fff!important;border-radius:999px!important;padding:7px 16px!important;font-weight:600;
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+  .special-combo-banner .special-settings-btn:hover{background:rgba(255,255,255,.28)!important}
+
+  /* iOS switch */
+  .special-toggle-slider{width:51px!important;height:31px!important;border-radius:999px!important;background:rgba(255,255,255,.28)!important;transition:background .3s var(--ios-ease)!important}
+  .special-toggle-slider::before{top:2px!important;left:2px!important;width:27px!important;height:27px!important;background:#fff!important;
+    box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06)!important;transition:transform .3s var(--ios-ease)!important}
+  .special-toggle input:checked + .special-toggle-slider{background:#34C759!important}
+  .special-toggle input:checked + .special-toggle-slider::before{transform:translateX(20px)!important;background:#fff!important}
+
+  /* ---------- buttons: capsules with a soft sheen ---------- */
+  .btn-primary{border-radius:999px!important;padding:13px 24px!important;font-weight:600!important;letter-spacing:-.01em;
+    background:linear-gradient(180deg,#D4243F 0%,var(--red) 55%,#B40C2A 100%)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 16px rgba(200,16,46,.28)!important;
+    transition:transform .2s var(--ios-ease),box-shadow .2s var(--ios-ease)!important}
+  .btn-primary:hover:not(:disabled){box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 10px 22px rgba(200,16,46,.34)!important}
+  .btn-primary:active:not(:disabled){transform:scale(.97)!important}
+  .btn-primary:disabled{background:var(--ios-fill-2)!important;color:rgba(60,60,67,.45)!important;box-shadow:none!important}
+  .btn-ghost{border-radius:999px!important;background:var(--ios-glass)!important;border:.5px solid rgba(0,0,0,.10)!important;
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 1px 2px rgba(0,0,0,.04)!important;font-weight:500}
+  .btn-ghost:hover{background:#fff!important}
+  .btn-danger{border-radius:999px!important}
+  .qty-stepper{background:var(--ios-fill)!important;border-radius:999px!important;padding:2px}
+  .qty-stepper button{border-radius:999px!important}
+  .qty-stepper button:hover:not(:disabled){background:#fff!important;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+  /* inputs: iOS fields */
+  select,input[type=text],input[type=number],input[type=search]{background:var(--ios-fill)!important;border:0!important;border-radius:12px!important}
+  select:focus,input:focus{background:#fff!important;box-shadow:0 0 0 3px rgba(200,16,46,.18)!important}
+  .rd-search input{padding-left:36px!important;border-radius:12px!important;
+    background:var(--ios-fill) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 12px 50%!important}
+  .rd-search input:focus{background-color:#fff!important}
+
+  /* category chips: capsules */
+  .rd-cat{border:0!important;background:var(--ios-fill)!important;color:#1C1C1E!important;font-weight:500;padding:8px 16px!important;
+    transition:background .3s var(--ios-ease),color .3s var(--ios-ease),transform .2s var(--ios-ease)}
+  .rd-cat:hover{background:var(--ios-fill-2)!important}
+  .rd-cat:active{transform:scale(.96)}
+  .rd-cat[aria-pressed=true]{background:var(--red)!important;color:#fff!important;box-shadow:0 4px 12px rgba(200,16,46,.28)}
+
+  /* product tiles + package cards: lift on hover, red ring when selected */
+  .rd-tile,.plan-card,.radio-card,.cart-item{border-radius:22px!important;border:.5px solid rgba(0,0,0,.07)!important;
+    box-shadow:0 1px 2px rgba(0,0,0,.04)!important;transition:transform .25s var(--ios-ease),box-shadow .25s var(--ios-ease)!important}
+  .rd-tile:hover,.plan-card:hover{transform:translateY(-2px);box-shadow:var(--ios-shadow-lift)!important}
+  .rd-tile:active,.plan-card:active{transform:scale(.985)}
+  .rd-tile[aria-pressed=true],.plan-card.active,.radio-card.active{border-color:transparent!important;
+    box-shadow:0 0 0 2px var(--red),0 10px 24px rgba(200,16,46,.16)!important;background:#fff!important}
+  .rd-tile-img,.rd-stage-img{border:0!important;border-radius:16px!important;background:#fff!important;box-shadow:inset 0 0 0 .5px rgba(0,0,0,.06)}
+  .plan-cycle-group.framed{border-radius:24px!important;background:rgba(118,118,128,.06)!important;border:0!important}
+
+  /* tags: soft capsules */
+  .tag{border-radius:999px!important;border:0!important;font-weight:500}
+  .tag-recommend{background:#1C1C1E!important}
+
+  /* segmented tabs (iOS segmented control) */
+  .rd-tabs{background:var(--ios-fill)!important;border-radius:12px!important;padding:2px!important}
+  .rd-tabs button{border-radius:10px!important;padding:8px 12px!important;color:#1C1C1E!important;font-weight:500;transition:background .3s var(--ios-ease)}
+  .rd-tabs button[aria-selected=true]{background:#fff!important;font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)!important}
+
+  /* summary blocks */
+  .rd-receipt .summary-first-pay-box{background:linear-gradient(90deg,var(--red-deep) 0%,var(--red-mid) 40%,var(--red) 75%,var(--red-light) 100%)!important;
+    border-radius:22px!important;box-shadow:0 10px 26px rgba(165,0,52,.25)!important}
+  .summary-grand-box{border-radius:22px!important;background:linear-gradient(135deg,#1C1C1E,#2C2C2E)!important}
+  .summary-promo-box,.summary-yellow-box,.summary-green-box,.summary-advance-box,
+  .summary-plain-box,.annual-value-box,.bill-range-box,.bill-schedule-card,.quote-print-box{border-radius:20px!important}
+  .bill-step{border-radius:14px!important;background:var(--ios-fill)!important}
+  details summary{border-radius:16px!important}
+
+  /* compare toggles + tables */
+  .btn-compare-toggle,.btn-compare-b-toggle{border-radius:16px!important;background:var(--ios-fill)!important;border:0!important}
+  .compare-b-chip{border-radius:999px!important}
+  .compare-table .cp-btn{border-radius:999px!important}
+
+  /* toast: dark glass capsule */
+  .toast{border-radius:999px!important;background:rgba(28,28,30,.82)!important;
+    -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+    box-shadow:0 10px 30px rgba(0,0,0,.25)!important}
+
+  /* mobile summary bar: floating red glass */
+  @media (max-width:1023px){
+    .rd-mbar{background:linear-gradient(90deg,rgba(122,0,38,.92),rgba(200,16,46,.92))!important;
+      -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+      border-radius:24px!important;box-shadow:0 12px 32px rgba(165,0,52,.35),inset 0 1px 0 rgba(255,255,255,.2)!important}
+    .rd-mbar-btn{border-radius:999px!important;color:var(--red)!important;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+  }
+  @media (prefers-reduced-motion:reduce){.rd-tile:hover,.plan-card:hover{transform:none}}
+  @media (max-width:640px){
+    header.rd-top .rd-seg button{padding:7px 6px;white-space:nowrap;font-size:14px}
+    .rd-search,.rd-search input{width:100%!important}
+  }
+
+  /* iOS switches for show-total / pay-once */
+  .rd-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:none;border:0;padding:6px 0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+  .rd-switch-text{display:flex;flex-direction:column;line-height:1.3}
+  .rd-switch-label{font-size:15px;font-weight:600;color:#1C1C1E}
+  .rd-switch-sub{font-size:12px;color:#6B6C6B}
+  .rd-switch-track{flex:0 0 51px;width:51px;height:31px;border-radius:999px;background:rgba(120,120,128,.16);position:relative;transition:background .3s var(--ios-ease)}
+  .rd-switch-knob{position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15),0 3px 1px rgba(0,0,0,.06);transition:transform .3s var(--ios-ease)}
+  .rd-switch[aria-checked=true] .rd-switch-track{background:#34C759}
+  .rd-switch[aria-checked=true] .rd-switch-knob{transform:translateX(20px)}
+  .rd-switch-sm{width:auto;padding:0;gap:8px}
+  .rd-switch-sm .rd-switch-label{font-size:12.5px;font-weight:500}
+  .summary-grand-box .rd-switch-label{color:rgba(255,255,255,.85)}
+  .summary-grand-box .rd-switch-track{background:rgba(255,255,255,.22)}
+  .summary-grand-box .rd-switch[aria-checked=true] .rd-switch-track{background:#34C759}
+
+  /* SPECIAL / แนะนำ tags: white text */
+  .tag-recommend,.tag.tag-recommend{color:#fff!important}
+
+  /* one contract total only: the dark box at the top of the summary */
+  .rd-receipt .bill-range-box .br-grand,
+  .rd-receipt .bill-range-box .br-cart-all .br-sum{display:none!important}
+
+  /* one contract total only: the dark box at the top of the summary */
+  .rd-receipt .bill-range-box .br-grand,
+  .rd-receipt .bill-range-box .br-cart-all .br-sum{display:none!important}
+</style>
 </head>
 <body>
 
 <div x-data="lgCalculator()" x-init="init()" class="content">
 
- <header>
- <div class="max-w-7xl px-6 inner justify-between">
- <div class="flex items-center gap-3">
- <div class="lg-badge font-display">LG</div>
- <div>
- <div class="font-display font-bold text-2xl tracking-tight">Subscribe Calculator</div>
- </div>
- </div>
- </div>
- </header>
-
- <div class="max-w-7xl px-6" style="padding-top:24px">
-  <div class="flex gap-3 flex-wrap" aria-label="เลือกโปรโมชั่น">
-   <button :class="calculatorMode === 'normal' ? 'btn-primary' : 'btn-ghost'" :aria-pressed="calculatorMode === 'normal'" @click="calculatorMode='normal'">โปรโมชั่นปกติ</button>
-   <button :class="calculatorMode === 'tradeIn' ? 'btn-primary' : 'btn-ghost'" :aria-pressed="calculatorMode === 'tradeIn'" @click="calculatorMode='tradeIn'">LG PuriCare Trade-in · ใหม่</button>
+ <header class="rd-top">
+ <div class="max-w-7xl px-6 rd-top-inner">
+  <div class="rd-brand">
+   <div class="lg-badge">LG</div>
+   <div><div class="rd-brand-name">Subscribe Calculator</div>
+   <div class="rd-brand-sub" x-text="isSpecialComboEffective() ? promoConfig.special.name : (promoConfig.normal.name || 'โปรเดือนปกติ')"></div></div>
+  </div>
+  <div class="rd-switches">
+   <div class="rd-seg" role="group" aria-label="โปรโมชั่น">
+    <button type="button" :aria-pressed="calculatorMode === 'normal'" @click="calculatorMode='normal'">โปรปกติ</button>
+    <button type="button" :aria-pressed="calculatorMode === 'tradeIn'" @click="calculatorMode='tradeIn'">Trade-in</button>
+   </div>
+   <div class="rd-seg" role="group" aria-label="ประเภทลูกค้า" x-show="calculatorMode === 'normal'">
+    <button type="button" :aria-pressed="customerType === 'new'" @click="customerType='new'" title="ไม่เคยใช้ LG Subscribe · ส่วนลดเริ่มที่ 2 ชิ้น">ลูกค้าใหม่</button>
+    <button type="button" :aria-pressed="customerType === 'exist'" @click="customerType='exist'" title="เคยใช้ LG Subscribe · ส่วนลดเริ่มที่ 1 ชิ้น">ลูกค้าเก่า</button>
+   </div>
   </div>
  </div>
- <section x-show="calculatorMode === 'tradeIn'" x-cloak class="max-w-7xl px-6 py-8" aria-label="LG PuriCare Trade-in Promotion">
+</header>
+
+<section x-show="calculatorMode === 'tradeIn'" x-cloak class="max-w-7xl px-6 py-8" aria-label="LG PuriCare Trade-in Promotion">
   <div class="card" style="padding:24px">
    <h2 class="font-display font-bold text-2xl">LG PuriCare Trade-in Promotion</h2>
    <p style="margin:8px 0 20px">Buy 1, Get 1 FREE! · 31 ต.ค.–30 พ.ย. 2569 · สินค้าหลัก 1 เครื่อง + เครื่องกรองน้ำ 1 เครื่อง</p>
@@ -870,11 +1298,10 @@
   </template>
  </section>
 
- <div x-show="calculatorMode === 'normal'" class="max-w-7xl px-6 py-8 grid grid-cols-1 lg-grid-main gap-8">
+  <div x-show="calculatorMode === 'normal'" class="max-w-7xl px-6 py-8 grid grid-cols-1 lg-grid-main gap-8 rd-grid">
 
  <!-- LEFT -->
- <div class="space-y-6">
-
+ <div class="space-y-6 rd-left">
  <!-- DOUBLE DAY 8.8 SHOCK PRICE (date-gated) -->
  <section class="shock-88-banner" x-show="isShockPromoActive()" x-cloak>
  <div class="flex items-center justify-between flex-wrap gap-3">
@@ -982,62 +1409,43 @@
  </div>
  </section>
 
-<!-- Customer type -->
- <section class="card p-6">
- <div class="flex items-center gap-3 mb-4">
- <span class="section-num">01 /</span>
- <h2 class="font-display font-bold text-lg">ประเภทลูกค้า <span class="text-gray-400 font-normal text-sm">/ Customer Type</span></h2>
- </div>
- <div class="grid grid-cols-2 gap-3">
- <label class="cursor-pointer">
- <input type="radio" x-model="customerType" value="new" class="hidden-peer" />
- <div class="radio-card" :class="customerType === 'new' ? 'active' : ''">
- <div class="font-semibold">ลูกค้าใหม่</div>
- <div class="text-xs text-gray-500 mt-1">New Customer · ไม่เคยซื้อ LG Subscribe มาก่อน · ส่วนลดเริ่มที่ซื้อ 2 ชิ้น</div>
- </div>
- </label>
- <label class="cursor-pointer">
- <input type="radio" x-model="customerType" value="exist" class="hidden-peer" />
- <div class="radio-card" :class="customerType === 'exist' ? 'active' : ''">
- <div class="font-semibold">ลูกค้าเก่า</div>
- <div class="text-xs text-gray-500 mt-1">Exist Customer · เคยซื้อ LG Subscribe และติดตั้งเสร็จแล้ว · ส่วนลดเริ่มที่ซื้อเพิ่ม 1 ชิ้น</div>
- </div>
- </label>
- </div>
+
+<!-- RD: product browser (tiles replace the two dropdowns; same picker state) -->
+ <section class="card rd-browser">
+  <div class="rd-browser-head">
+   <h2>เลือกสินค้า</h2>
+   <div class="rd-search"><input type="search" x-model="rdQuery" placeholder="ค้นหาสินค้าทั้งหมด เช่น F2520, แอร์ 12000, OLED" aria-label="ค้นหาสินค้าทั้งหมด" /></div>
+  </div>
+  <div class="rd-cats" role="toolbar" aria-label="หมวดสินค้า">
+   <template x-for="cat in categoryList" :key="'rc-' + cat">
+    <button type="button" class="rd-cat" :aria-pressed="picker.category === cat" @click="rdPickCategory(cat)" x-text="categoryDisplayName(cat)"></button>
+   </template>
+  </div>
+  <p class="rd-hint" x-show="!picker.category && !rdQuery.trim()">เลือกหมวดสินค้า หรือพิมพ์ค้นหาจากสินค้าทั้งหมด</p>
+  <p class="rd-hint" x-show="rdQuery.trim() && rdTiles().length" x-text="'พบ ' + rdTiles().length + ' รุ่นจากทุกหมวด'"></p>
+  <div class="rd-tiles" x-show="picker.category || rdQuery.trim()">
+   <template x-for="t in rdTiles()" :key="'rt-' + t.cat + '-' + t.idx">
+    <button type="button" class="rd-tile" :aria-pressed="picker.category === t.cat && String(picker.model) === t.idx" @click="rdPickModel(t.idx, t.cat)">
+     <span class="rd-tile-img"><img :src="t.img" alt="" loading="lazy" x-show="t.img" /></span>
+     <span class="rd-tile-cat" x-show="rdQuery.trim()" x-text="categoryDisplayName(t.cat)"></span>
+     <span class="rd-tile-code" x-text="t.code"></span>
+     <span class="rd-tile-name" x-text="t.name"></span>
+     <span class="rd-tile-from" x-show="t.from !== null"><span>ปกติเริ่ม</span> <b x-text="'฿' + Number(t.from).toLocaleString('th-TH')"></b><span>/เดือน</span></span>
+    </button>
+   </template>
+   <p class="rd-hint" x-show="rdQuery.trim() && !rdTiles().length" x-text="'ไม่พบสินค้าที่ตรงกับ “' + rdQuery.trim() + '” ลองพิมพ์รหัสรุ่นให้สั้นลง เช่น F2520'"></p>
+  </div>
  </section>
 
-<!-- Product picker -->
- <section class="card p-6">
- <div class="flex items-center gap-3 mb-4">
- <span class="section-num">02 /</span>
- <h2 class="font-display font-bold text-lg">เลือกสินค้า <span class="text-gray-400 font-normal text-sm">/ Add Product</span></h2>
- </div>
-
- <div class="grid grid-cols-1 md-grid-2 gap-3 mb-4">
- <div>
- <label class="text-xs text-gray-500 mb-1 block font-medium">หมวดสินค้า / Category</label>
- <select x-model="picker.category" @change="onCategoryChange()">
- <option value="">— เลือกหมวด —</option>
- <template x-for="cat in categoryList" :key="cat">
- <option :value="cat" x-text="categoryDisplayName(cat)"></option>
- </template>
- </select>
- </div>
- <div>
- <label class="text-xs text-gray-500 mb-1 block font-medium">รุ่นสินค้า / Model</label>
- <select x-model="picker.model" :disabled="!picker.category" @change="onModelChange()">
- <option value="">— เลือกรุ่น —</option>
- <template x-for="m in modelList" :key="m.idx">
- <option :value="m.idx" x-text="m.label"></option>
- </template>
- </select>
- </div>
- </div>
-
- <div class="category-product-img mb-3" x-show="hasModelSelected() && modelImage()" x-cloak>
- <img :src="modelImage()" :alt="currentModel()?.name || ''" loading="lazy" decoding="async" />
- </div>
-
+ <section class="card rd-stage" id="rd-stage" x-show="hasModelSelected()">
+  <div class="rd-stage-top">
+   <div class="rd-stage-img"><img :src="rdFit(modelImage())" :alt="currentModel()?.name || ''" x-show="modelImage()" /></div>
+   <div class="rd-stage-meta">
+    <div class="rd-stage-cat" x-text="categoryDisplayName(picker.category)"></div>
+    <h2 class="rd-stage-code" x-text="String(currentModel()?.code || '').split('.')[0]"></h2>
+    <p class="rd-stage-name" x-text="currentModel()?.name || ''"></p>
+   </div>
+  </div>
  <template x-if="hasModelSelected()" :key="'planpick-' + picker.category + '-' + picker.model">
  <div>
  <div class="plan-card mb-3" x-show="selectedCashPrice()">
@@ -1259,9 +1667,9 @@
  <span x-text="(Number(picker.qty)||1) > 1 ? ('+ เพิ่ม ' + (Number(picker.qty)||1) + ' ชิ้นเข้ารายการ') : '+ เพิ่มสินค้าเข้ารายการ'"></span>
  </button>
  </div>
+ 
  </section>
-
- <!-- Cart -->
+<!-- Cart -->
  <section class="card p-6">
  <div class="flex items-center justify-between mb-4">
  <div class="flex items-center gap-3">
@@ -1322,43 +1730,14 @@
  </div>
  </section>
 
- <!-- Care Service -->
- <section class="card p-6" x-show="cart.length > 0">
- <div class="flex items-center gap-3 mb-4">
- <span class="section-num">04 /</span>
- <h2 class="font-display font-bold text-lg">บริการดูแล Care Service <span class="text-gray-400 font-normal text-sm">/ Maintenance</span></h2>
- </div>
-
- <template x-for="(g, i) in quoteGroupedItems()" :key="'care-' + quoteGroupKey(g.item) + '-' + i">
- <details :open="i === 0">
- <summary>
- <div class="flex items-center gap-2 flex-wrap">
- <span class="arrow">▸</span>
- <span class="font-semibold text-sm" x-text="careCategoryLabel(g.item)"></span>
- <span class="font-mono text-xs text-gray-500" x-text="g.item.code"></span>
- <span class="tag" style="background:var(--blood-soft);color:var(--blood)" x-show="g.qty > 1" x-text="'×' + g.qty"></span>
- </div>
- <span class="text-xs text-gray-400">ดูรายละเอียดบริการ</span>
- </summary>
- <div style="padding:0 16px 16px">
- <div class="service-card">
- <div class="text-xs font-semibold text-gray-700 mb-2" x-text="careService(g.item).title"></div>
- <ul class="service-list">
- <template x-for="svc in careService(g.item).items" :key="svc.label">
- <li>
- <span x-text="'• ' + svc.label"></span>
- <span class="freq" x-text="svc.freq"></span>
- </li>
- </template>
- </ul>
- <div class="text-xs text-gray-400 mt-3 italic" style="padding-top:8px;border-top:1px solid #e5e7eb" x-text="careService(g.item).note"></div>
- </div>
- </div>
- </details>
- </template>
- </section>
-
- <!-- Bill Schedule -->
+ 
+<!-- RD: schedule + care as tabs -->
+ <section class="card rd-details" x-show="cart.length > 0">
+  <div class="rd-tabs" role="tablist">
+   <button type="button" role="tab" :aria-selected="rdDetailTab === 'bills'" @click="rdDetailTab = 'bills'">ตารางชำระรายเดือน</button>
+   <button type="button" role="tab" :aria-selected="rdDetailTab === 'care'" @click="rdDetailTab = 'care'">บริการดูแลรักษา</button>
+  </div>
+  <div x-show="rdDetailTab === 'bills'"><!-- Bill Schedule -->
  <section class="card p-6" x-show="cart.length > 0">
  <div class="flex items-center gap-3 mb-4">
  <span class="section-num">05 /</span>
@@ -1403,32 +1782,51 @@
  </section>
 
  </div>
+  <div x-show="rdDetailTab === 'care'"><!-- Care Service -->
+ <section class="card p-6" x-show="cart.length > 0">
+ <div class="flex items-center gap-3 mb-4">
+ <span class="section-num">04 /</span>
+ <h2 class="font-display font-bold text-lg">บริการดูแล Care Service <span class="text-gray-400 font-normal text-sm">/ Maintenance</span></h2>
+ </div>
+
+ <template x-for="(g, i) in quoteGroupedItems()" :key="'care-' + quoteGroupKey(g.item) + '-' + i">
+ <details :open="i === 0">
+ <summary>
+ <div class="flex items-center gap-2 flex-wrap">
+ <span class="arrow">▸</span>
+ <span class="font-semibold text-sm" x-text="careCategoryLabel(g.item)"></span>
+ <span class="font-mono text-xs text-gray-500" x-text="g.item.code"></span>
+ <span class="tag" style="background:var(--blood-soft);color:var(--blood)" x-show="g.qty > 1" x-text="'×' + g.qty"></span>
+ </div>
+ <span class="text-xs text-gray-400">ดูรายละเอียดบริการ</span>
+ </summary>
+ <div style="padding:0 16px 16px">
+ <div class="service-card">
+ <div class="text-xs font-semibold text-gray-700 mb-2" x-text="careService(g.item).title"></div>
+ <ul class="service-list">
+ <template x-for="svc in careService(g.item).items" :key="svc.label">
+ <li>
+ <span x-text="'• ' + svc.label"></span>
+ <span class="freq" x-text="svc.freq"></span>
+ </li>
+ </template>
+ </ul>
+ <div class="text-xs text-gray-400 mt-3 italic" style="padding-top:8px;border-top:1px solid #e5e7eb" x-text="careService(g.item).note"></div>
+ </div>
+ </div>
+ </details>
+ </template>
+ </section>
+
+ </div>
+ </section>
+ </div>
 
  <aside>
  <div class="sticky-summary space-y-4">
 
- <div class="card p-5" :class="isSpecialComboEffective() ? 'promo-card-on' : ''">
- <div class="text-xs font-mono uppercase tracking-wider mb-1 promo-period-label" :style="isSpecialComboEffective() ? '' : 'color:var(--muted)'">PROMOTION PERIOD</div>
- <template x-if="!isSpecialComboEffective()">
- <div>
- <div class="font-display font-bold text-lg" style="color:var(--ink)" x-text="promoConfig.normal.name"></div>
- <div class="text-xs mt-1" style="color:var(--muted)" x-text="fmtDate(promoConfig.normal.dateStart) + ' – ' + fmtDate(promoConfig.normal.dateEnd) + ' · โปรคอมโบเดือนปกติ'"></div>
- <div class="text-xs mt-1" style="color:#b45309" x-show="specialCombo && !isSpecialComboInPeriod()" x-text="specialComboIdleText()"></div>
- </div>
- </template>
- <template x-if="isSpecialComboEffective()">
- <div>
- <div class="font-display font-bold text-lg" x-text="promoConfig.special.name"></div>
- <div class="text-xs mt-1" x-show="promoConfig.special.note" x-text="promoConfig.special.note"></div>
- <div class="text-xs mt-1" x-text="fmtDate(promoConfig.special.dateStart) + ' – ' + fmtDate(promoConfig.special.dateEnd) + ' · ส่วนลดสูงสุด ' + Math.max(0, ...promoConfig.special.newTiers.map(t=>t.rate), ...promoConfig.special.existTiers.map(t=>t.rate), Number(promoConfig.special.waterRate)||0) + '%'"></div>
- <div class="text-xs mt-1" style="opacity:.85">ใบเสนอ/สรุป: สงวนสิทธิ์ถึงวันหมดคอมโบพิเศษ</div>
- </div>
- </template>
- </div>
-
- <div class="card p-6">
- <h3 class="font-display font-bold text-lg mb-1">สรุปยอด</h3>
- <div class="text-xs text-gray-500 mb-4">Order Summary</div>
+ <div class="card p-6 rd-receipt" id="rd-summary">
+ <h3 class="rd-receipt-title">สรุปยอด<span x-show="cart.length" x-text="cart.length + ' ชิ้น'"></span></h3>
 
  <div x-show="cart.length === 0" class="text-sm text-gray-400 text-center" style="padding:24px 0"> ยังไม่มีสินค้า
  </div>
@@ -1475,7 +1873,7 @@
  </div>
  </template>
  <div x-show="cart.length > 0 && comboRate() === 0" class="text-xs text-gray-500 italic">
- <span x-text="'* เพิ่มสินค้าอีก ' + (minTierItems() - cart.length) + ' ชิ้นเพื่อรับส่วนลด ' + comboLabel() + ' ' + minTierRate() + '%'"></span>
+ <span x-text="'* เพิ่มสินค้าอีก ' + (minTierItems() - cart.length) + ' ชิ้นเพื่อรับส่วนลด ' + rdWithPct(comboLabel(), minTierRate())"></span>
  </div>
  </div>
 
@@ -1546,9 +1944,7 @@
  <div class="summary-grand-box" x-show="quoteShowGrandTotal">
  <div class="flex items-start justify-between gap-2 mb-1">
  <div class="text-xs uppercase tracking-wider" style="color:var(--muted)">ยอดรวมตลอดสัญญา · Total Contract Value</div>
- <button type="button" class="text-xs font-semibold shrink-0"
-   style="color:rgba(255,255,255,.92);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:3px 10px;cursor:pointer"
-   @click="setQuoteShowGrandTotal(false)" title="ไม่แสดงยอดสุทธิในจอและใบพิมพ์">ไม่แสดงยอดสุทธิ</button>
+ <button type="button" role="switch" class="rd-switch rd-switch-sm" title="แสดง/ไม่แสดงยอดสุทธิในจอและใบพิมพ์" :aria-checked="(quoteShowGrandTotal) ? 'true' : 'false'" @click="setQuoteShowGrandTotal(!quoteShowGrandTotal)"><span class="rd-switch-text"><span class="rd-switch-label">แสดง</span></span><span class="rd-switch-track" aria-hidden="true"><span class="rd-switch-knob"></span></span></button>
  </div>
  <div class="font-display font-bold" style="color:#fff;font-size:30px;letter-spacing:0" x-text="'฿' + fmtMoney(grandTotal())"></div>
  <div class="text-xs mt-1" style="color:rgba(255,255,255,.8)">
@@ -1576,7 +1972,7 @@
  <div class="mb-3" x-show="!quoteShowGrandTotal" style="border:1px dashed #d1d5db;border-radius:10px;padding:10px 12px;background:#fafafa">
  <div class="flex items-center justify-between gap-2 flex-wrap">
  <div class="text-xs text-gray-500">ยอดรวมทั้งสัญญา · <strong style="color:#a50034">ไม่แสดงยอดสุทธิ</strong> (จอ + ใบพิมพ์/คัดลอก)</div>
- <button type="button" class="btn-ghost" style="padding:5px 10px;font-size:11px" @click="setQuoteShowGrandTotal(true)">แสดงยอดสุทธิ</button>
+ <button type="button" role="switch" class="rd-switch rd-switch-sm" :aria-checked="(quoteShowGrandTotal) ? 'true' : 'false'" @click="setQuoteShowGrandTotal(!quoteShowGrandTotal)"><span class="rd-switch-text"><span class="rd-switch-label">แสดง</span></span><span class="rd-switch-track" aria-hidden="true"><span class="rd-switch-knob"></span></span></button>
  </div>
  </div>
 
@@ -1586,17 +1982,20 @@
  <div class="text-xs text-gray-500 mt-1" x-text="comboRate() > 0 ? 'ส่วนลดจากโปร + Combo เทียบราคาปกติ' : 'ส่วนลดจากโปรเทียบราคาปกติ'"></div>
  </div>
 
- <!-- ANNUAL VALUE BREAKDOWN -->
- <div class="mt-4 annual-value-box" x-show="cart.length > 0" x-html="annualValueHtml()"></div>
-
- <!-- BILL RANGE TOTALS -->
- <div class="mt-4 bill-range-box" x-show="cart.length > 0" x-html="billRangeHtml()"></div>
-
- <div class="mt-4 summary-plain-box">
- <strong class="">สรุปแบบเข้าใจง่าย</strong>
- <span x-html="plainSummary()"></span>
+ <!-- RD: detail tabs (same three generators as before) -->
+ <div class="rd-tabs-wrap" x-show="cart.length > 0">
+  <div class="rd-tabs" role="tablist">
+   <button type="button" role="tab" :aria-selected="rdTab === 'ranges'" @click="rdTab = 'ranges'">แยกช่วงงวด</button>
+   <button type="button" role="tab" :aria-selected="rdTab === 'annual'" @click="rdTab = 'annual'">ต่อปี</button>
+   <button type="button" role="tab" :aria-selected="rdTab === 'plain'" @click="rdTab = 'plain'">สรุปง่าย</button>
+  </div>
+  <div class="bill-range-box" x-show="rdTab === 'ranges'" x-html="billRangeHtml()"></div>
+  <div class="annual-value-box" x-show="rdTab === 'annual'" x-html="annualValueHtml()"></div>
+  <div class="summary-plain-box" x-show="rdTab === 'plain'"><span x-html="plainSummary()"></span></div>
  </div>
-
+ <div class="summary-plain-box" x-show="cart.length === 0">
+  <span x-html="plainSummary()"></span>
+ </div>
 
  <div class="mt-4 quote-print-box" x-show="cart.length > 0" style="border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafafa">
               <div class="text-xs text-gray-500 mb-2">
@@ -1604,34 +2003,10 @@
                 <strong style="color:var(--ink)">ใบเสนอราคา</strong> = มีเซ็นรับทราบ + วันที่อัตโนมัติ<br/>
                 <span x-text="validDaysHint()"></span>
               </div>
-              <!-- ยอดสุทธิ / Total ในใบสรุป-ใบเสนอ: แสดงหรือตัดออก -->
-              <div class="mb-3" style="border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff">
-                <div class="text-xs font-semibold mb-1" style="color:var(--ink)">คอลัมน์ยอดสุทธิ + แถว Total. ในใบสรุปราคา</div>
-                <div class="text-xs text-gray-500 mb-2">ไม่แสดงยอดสุทธิ = ไม่โชว์คอลัมน์ «ยอดสุทธิ» และแถว Total. (ยังเหลือราคาปกติ/ราคาโปรต่อเดือน + ยอดชำระครั้งแรก)</div>
-                <div class="flex gap-2 flex-wrap">
-                  <button type="button" class="btn-ghost" style="flex:1;min-width:120px;padding:8px 10px;font-size:12px"
-                    :style="quoteShowGrandTotal ? 'background:var(--ink);color:#fff;border-color:var(--ink)' : ''"
-                    @click="setQuoteShowGrandTotal(true)">แสดงยอดสุทธิ</button>
-                  <button type="button" class="btn-ghost" style="flex:1;min-width:120px;padding:8px 10px;font-size:12px"
-                    :style="!quoteShowGrandTotal ? 'background:var(--ink);color:#fff;border-color:var(--ink)' : ''"
-                    @click="setQuoteShowGrandTotal(false)">ไม่แสดงยอดสุทธิ</button>
-                </div>
-                <div class="text-xs mt-1.5" :style="quoteShowGrandTotal ? 'color:#15803d' : 'color:#a50034'"
-                  x-text="quoteShowGrandTotal ? 'ใบสรุป/ใบเสนอจะมีคอลัมน์ยอดสุทธิ + แถว Total. + ยอดรวมทั้งสิ้น' : (quotePayOnce ? 'ไม่แสดงคอลัมน์ยอดสุทธิ แต่ใบยังมียอดชำระครั้งเดียว' : 'ไม่แสดงยอดสุทธิ/Total. ในใบแล้ว (ยังมียอดชำระครั้งแรก)')"></div>
-              </div>
               <div class="mb-3" style="border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff">
                 <div class="text-xs font-semibold mb-1" style="color:var(--ink)">รูปแบบการชำระในใบสรุป/ใบเสนอ</div>
-                <div class="text-xs text-gray-500 mb-2">จ่ายครั้งเดียว = รวมทุกงวดทั้งสัญญาเป็นยอดเดียว · ราคาโปรและคอมโบเท่าเดิม ไม่มีส่วนลดเพิ่ม</div>
-                <div class="flex gap-2 flex-wrap">
-                  <button type="button" class="btn-ghost" style="flex:1;min-width:120px;padding:8px 10px;font-size:12px"
-                    :style="!quotePayOnce ? 'background:var(--ink);color:#fff;border-color:var(--ink)' : ''"
-                    @click="setQuotePayOnce(false)">ผ่อนรายเดือน</button>
-                  <button type="button" class="btn-ghost" style="flex:1;min-width:120px;padding:8px 10px;font-size:12px"
-                    :style="quotePayOnce ? 'background:var(--ink);color:#fff;border-color:var(--ink)' : ''"
-                    @click="setQuotePayOnce(true)">จ่ายครั้งเดียว</button>
-                </div>
-                <div class="text-xs mt-1.5" :style="quotePayOnce ? 'color:#a50034' : 'color:#15803d'"
-                  x-text="quotePayOnce ? ('ใบนี้จ่ายครั้งเดียว ฿' + fmtMoney(grandTotal()) + ' รวมทุกงวด') : 'ใบนี้แสดงตารางผ่อนรายเดือนตามงวด'"></div>
+                <button type="button" role="switch" class="rd-switch" :aria-checked="(!quotePayOnce) ? 'true' : 'false'" @click="setQuotePayOnce(!quotePayOnce)"><span class="rd-switch-text"><span class="rd-switch-label">ผ่อนรายเดือน</span><span class="rd-switch-sub" x-text="quotePayOnce ? ('ปิดอยู่ = จ่ายครั้งเดียว ฿' + fmtMoney(grandTotal()) + ' รวมทุกงวด') : 'แสดงตารางผ่อนรายเดือนตามงวด'"></span></span><span class="rd-switch-track" aria-hidden="true"><span class="rd-switch-knob"></span></span></button>
+                
               </div>
               <!-- ปุ่มพิมพ์/เซฟ โชว์ตลอด — ไม่ต้องเปิดฟอร์ม -->
               <div class="space-y-2">
@@ -1639,7 +2014,7 @@
                 <button class="btn-primary" style="width:100%;background:var(--ink)" @click="printQuotation('proposal')">พิมพ์ใบเสนอราคา</button>
                 <button class="btn-ghost" style="width:100%" @click="exportQuotationImage('summary')">เซฟใบสรุปราคา (รูป)</button>
                 <button class="btn-ghost" style="width:100%" @click="exportQuotationImage('proposal')">เซฟใบเสนอราคา (รูป)</button>
-                <label class="text-xs font-semibold block mb-1">รูปแบบข้อความสำหรับลูกค้า<select aria-label="รูปแบบข้อความสำหรับลูกค้า" x-model="summaryAudience" style="margin-top:6px"><option value="general">1. แบบทั่วไป</option><option value="credit">2. แบบบัตรเครดิต</option><option value="account">3. แบบหักบัญชีอัตโนมัติ</option><option value="product">4. เฉพาะสินค้าและราคา</option></select></label><button class="btn-ghost" style="width:100%" @click="copySummary()">คัดลอกข้อความ</button>
+                <label class="text-xs font-semibold block mb-1">รูปแบบข้อความสำหรับลูกค้า<select aria-label="รูปแบบข้อความสำหรับลูกค้า" x-model="summaryAudience" style="margin-top:6px"><option value="product">1. เฉพาะสินค้าและราคา</option><option value="account">2. แบบหักบัญชีอัตโนมัติ</option><option value="credit">3. แบบบัตรเครดิต</option><option value="general">4. แบบทั่วไป</option></select></label><button class="btn-ghost" style="width:100%" @click="copySummary()">คัดลอกข้อความ</button>
               </div>
               <!-- ซ่อนเฉพาะช่องกรอกข้อมูลลูกค้า/ผู้เสนอราคา -->
               <button type="button" class="btn-compare-toggle" style="width:100%;margin-top:10px;margin-bottom:0"
@@ -1674,7 +2049,7 @@
               </div>
             </div>
             <div class="mt-4" x-show="cart.length === 0">
-              <label class="text-xs font-semibold block mb-1">รูปแบบข้อความสำหรับลูกค้า<select aria-label="รูปแบบข้อความสำหรับลูกค้า" x-model="summaryAudience" style="margin-top:6px"><option value="general">1. แบบทั่วไป</option><option value="credit">2. แบบบัตรเครดิต</option><option value="account">3. แบบหักบัญชีอัตโนมัติ</option><option value="product">4. เฉพาะสินค้าและราคา</option></select></label><button class="btn-primary" style="width:100%" @click="copySummary()">คัดลอกข้อความ</button>
+              <label class="text-xs font-semibold block mb-1">รูปแบบข้อความสำหรับลูกค้า<select aria-label="รูปแบบข้อความสำหรับลูกค้า" x-model="summaryAudience" style="margin-top:6px"><option value="product">1. เฉพาะสินค้าและราคา</option><option value="account">2. แบบหักบัญชีอัตโนมัติ</option><option value="credit">3. แบบบัตรเครดิต</option><option value="general">4. แบบทั่วไป</option></select></label><button class="btn-primary" style="width:100%" @click="copySummary()">คัดลอกข้อความ</button>
             </div>
  </div>
  </div>
@@ -1715,7 +2090,14 @@
  </div>
 
  
-  <footer class="app-footer">
+  
+ <!-- RD: mobile summary bar -->
+ <div class="rd-mbar" x-show="calculatorMode === 'normal' && cart.length > 0" x-cloak>
+  <div><span>จ่ายครั้งแรก</span><b x-text="'฿' + fmtMoney(firstPaymentTotal())"></b></div>
+  <div><span>ต่อเดือน (สุทธิ)</span><b x-text="'฿' + netMonthly().toLocaleString()"></b></div>
+  <a href="#rd-summary" class="rd-mbar-btn">ดูสรุป</a>
+ </div>
+<footer class="app-footer">
     <div class="max-w-7xl px-6 app-footer-inner">
       <span class="app-footer-ver" x-text="buildVersion"></span>
     </div>
@@ -1911,7 +2293,7 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.21-v1',
+ buildVersion: '2026.11.22-v1',
  summaryAudience: 'general',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
@@ -1992,6 +2374,78 @@ function lgCalculator() {
  hasModelSelected() {
  const v = this.picker.model;
  return v !== '' && v !== null && v !== undefined;
+ },
+ rdTab: 'ranges',
+ rdDetailTab: 'bills',
+ rdQuery: '',
+ rdTiles() {
+   const q = String(this.rdQuery || '').trim().toLowerCase();
+   const cats = q ? this.categoryList : (this.picker.category ? [this.picker.category] : []);
+   const out = [];
+   cats.forEach(cat => {
+     (this.catalog[cat]?.models || []).forEach((m, idx) => {
+       const subs = (m.plans || []).filter(p => !p.outright && Number(p.regular) > 0);
+       const t = {
+         cat,
+         idx: String(idx),
+         code: String(m.code || '').split('.')[0],
+         name: m.name || '',
+         img: this.rdFit(this.modelImages[m.code] || ''),
+         from: subs.length ? Math.min(...subs.map(p => Number(p.regular))) : null,
+       };
+       const hay = (m.code + ' ' + t.name + ' ' + cat + ' ' + this.categoryDisplayName(cat)).toLowerCase();
+       if (!q || q.split(/\s+/).every(w => hay.includes(w))) out.push(t);
+     });
+   });
+   return out;
+ },
+ rdWithPct(name, pct) {
+   const n = String(name || '').trim();
+   const tag = String(pct) + '%';
+   return n.includes(tag) ? n : (n + ' ' + tag);
+ },
+ rdFit(path) {
+   // tightly-cropped copy so the product fills its frame (originals stay for quotes/prints)
+   return path ? String(path).replace('assets/products/', 'assets/products-fit/') : '';
+ },
+ rdPickCategory(cat) {
+   this.rdQuery = '';
+   if (this.picker.category === cat) return;
+   this.picker.category = cat;
+   this.onCategoryChange();
+ },
+ rdPickModel(idx, cat) {
+   if (cat && this.picker.category !== cat) {
+     this.picker.category = cat;
+     this.onCategoryChange();
+   }
+   this.picker.model = String(idx);
+   this.onModelChange();
+   this.$nextTick(() => {
+     const el = document.getElementById('rd-stage');
+     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+   });
+ },
+ rdStrip() {
+   const r = this.cartBillRangeTotals();
+   const bills = [];
+   r.segments.forEach(sg => { for (let b = sg.start; b <= sg.end; b++) bills.push({ bill: b, price: sg.pricePerMonth }); });
+   // a bill is "promo" when any item in the cart is still below its own final (regular) bill
+   const promoBills = new Set();
+   this.cart.forEach(it => {
+     if (it.outright) return;
+     const bs = this.itemComboSchedule(it).bills;
+     if (!bs.length) return;
+     const fin = bs[bs.length - 1].price;
+     bs.forEach(x => { if (x.price < fin - 0.01) promoBills.add(x.bill); });
+   });
+   const max = Math.max(1, ...bills.map(b => b.price));
+   const last = bills.length ? bills[bills.length - 1].price : 0;
+   return {
+     advance: r.advance,
+     last,
+     bills: bills.map(b => ({ bill: b.bill, price: b.price, h: Math.max(4, Math.round(b.price / max * 100)), promo: promoBills.has(b.bill) })),
+   };
  },
  modelImage() {
  if (!this.hasModelSelected() || !this.currentModel()) return '';
@@ -3617,9 +4071,9 @@ function lgCalculator() {
    : '';
  const label = specialName || 'Combo Special';
  const split = water && waterPct > 0 && waterPct !== base;
- if (split && other) return label + ' ' + base + '% · เครื่องกรองน้ำ ' + waterPct + '%';
+ if (split && other) return this.rdWithPct(label, base) + ' · เครื่องกรองน้ำ ' + waterPct + '%';
  if (split) return label + ' · เครื่องกรองน้ำ ' + waterPct + '%';
- return label + ' ' + base + '%';
+ return this.rdWithPct(label, base);
  },
  comboLabel() {
  const name = this.activePromo().name || 'Combo';
@@ -5512,7 +5966,17 @@ function lgCalculator() {
         if (!map.has(k)) map.set(k, { item: it, qty: 0 });
         map.get(k).qty += 1;
       });
-      return Array.from(map.values());
+      // เรียงรายการจากมูลค่าสูงสุดก่อนเสมอ (ยอดรวมทั้งสัญญาของรายการ × จำนวน) · เท่ากันคงลำดับเดิม
+      return Array.from(map.values())
+        .map((g, i) => ({ g, i, v: this.rdGroupValue(g) }))
+        .sort((a, b) => (b.v - a.v) || (a.i - b.i))
+        .map(x => x.g);
+    },
+    rdGroupValue(g) {
+      const it = g.item;
+      if (it.outright) return (Number(it.advancePayment) || 0) * g.qty;
+      const ranges = this.billRangeTotals(it);
+      return (ranges.reduce((s, r) => s + r.total, 0) + (Number(it.advancePayment) || 0)) * g.qty;
     },
     // mode: 'summary' | 'proposal' · opts.autoPrint = true เฉพาะตอนพิมพ์ (เซฟรูปต้องปิด ไม่งั้น iframe จะเด้งหน้า print)
     // opts.showGrandTotal: บังคับโชว์/ซ่อนยอดรวมทั้งสิ้นในใบพิมพ์ (default = quoteShowGrandTotal)
