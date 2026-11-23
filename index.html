@@ -1192,6 +1192,62 @@
   /* one contract total only: the dark box at the top of the summary */
   .rd-receipt .bill-range-box .br-grand,
   .rd-receipt .bill-range-box .br-cart-all .br-sum{display:none!important}
+
+  /* ===================== tone pass 2026-11-23 =====================
+     One red family (deep #7A0026 -> brand #C8102E), warm neutrals, red only where it means something. */
+  :root{--tone-bg:#F4F3F1;--tone-ink:#1C1B1A;--tone-ink-2:#4A4846;--tone-muted:#76736F;--tone-fill:rgba(60,50,40,.06);--tone-line:rgba(40,30,20,.09);
+    --red-grad:linear-gradient(100deg,#7A0026 0%,#A50034 45%,#C8102E 100%)}
+  html,body{background:var(--tone-bg)!important}
+  header.rd-top{background:linear-gradient(180deg,#C8102E,#B70D2A)!important}
+  .special-combo-banner.active{background:var(--red-grad)!important}
+  .rd-receipt .summary-first-pay-box{background:var(--red-grad)!important}
+  .summary-grand-box{background:linear-gradient(135deg,#1F1D1C,#2E2B29)!important}
+  @media (max-width:1023px){.rd-mbar{background:linear-gradient(100deg,rgba(122,0,38,.94),rgba(200,16,46,.94))!important}}
+
+  /* Subscribe Day switch OFF -> plain white card */
+  .special-combo-banner:not(.active){background:#fff!important;color:var(--tone-ink);box-shadow:var(--ios-shadow)!important;
+    border:.5px solid rgba(0,0,0,.05)!important;--ink:var(--tone-ink);--ink-2:var(--tone-ink-2);--muted:var(--tone-muted)}
+  .special-combo-banner:not(.active) .font-display,.special-combo-banner:not(.active) .font-semibold{color:var(--tone-ink)!important}
+  .special-combo-banner:not(.active) .text-xs,.special-combo-banner:not(.active) p{color:var(--tone-muted)!important}
+  .special-combo-banner:not(.active) .special-settings-btn{background:var(--tone-fill)!important;border:0!important;color:var(--tone-ink)!important;box-shadow:none!important}
+  .special-combo-banner:not(.active) .special-settings-btn:hover{background:rgba(60,50,40,.11)!important}
+  .special-combo-banner:not(.active) .special-toggle-slider{background:rgba(120,120,128,.18)!important}
+  .special-combo-banner:not(.active) .combo-settings{background:var(--tone-fill)!important}
+  .special-combo-banner:not(.active) .combo-btn-save{background:var(--brand)!important;color:#fff!important}
+  .special-combo-banner:not(.active) .combo-btn-reset{border-color:rgba(0,0,0,.18)!important;color:var(--tone-ink)!important}
+
+  /* text + neutrals warmer and calmer */
+  .card{border-color:rgba(40,30,20,.05)!important}
+  .rd-cat,.rd-tabs,.qty-stepper,.bill-step,.btn-compare-toggle,.btn-compare-b-toggle,
+  select,input[type=text],input[type=number],input[type=search]{background-color:var(--tone-fill)!important}
+  select:focus,input:focus{background-color:#fff!important}
+  .rd-cat[aria-pressed=true]{background:var(--brand)!important}
+  .rd-tile-from b,.rd-tile-code,.rd-stage h2{color:var(--tone-ink)}
+  .rd-tile-name,.rd-stage-cat,.rd-hint{color:var(--tone-muted)}
+
+  /* red only for the key number: first bill step; later steps in ink */
+  html body .bill-step .bill-step-price{color:var(--tone-ink)!important}
+  html body .bill-step:first-child .bill-step-price{color:var(--brand)!important}
+  .bill-range-box .br-cart-all{background:#FBF7F5!important;border-color:var(--tone-line)!important}
+  .bill-range-box .br-cart-all .br-title{color:var(--tone-ink)!important}
+  .bill-range-box .br-cart-all .br-total{color:var(--brand)!important}
+
+  /* second print button: charcoal, so only one red primary per group */
+  .btn-primary[style*="var(--ink)"]{background:linear-gradient(180deg,#34312F,#1F1D1C)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 16px rgba(0,0,0,.18)!important}
+
+  /* mobile category picker: tap to choose, no sideways scrolling */
+  .rd-cat-picker{display:none}
+  @media (max-width:640px){
+    .rd-cat-picker{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;border:0;cursor:pointer;font:inherit;text-align:left;
+      background:#fff;border-radius:16px;padding:10px 14px;box-shadow:0 0 0 1.5px var(--brand) inset;color:var(--tone-ink)}
+    .rd-cat-picker-text{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+    .rd-cat-picker-text small{font-size:12px;color:var(--tone-muted)}
+    .rd-cat-picker-text b{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rd-cat-picker-act{flex:0 0 auto;background:var(--brand);color:#fff;border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600}
+    .rd-cats{display:none!important}
+    .rd-cats.rd-cats-open{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 0;padding:0;overflow:visible}
+    .rd-cats.rd-cats-open .rd-cat{white-space:normal;line-height:1.25;min-height:46px;padding:8px 12px!important;border-radius:14px!important;text-align:left;font-size:14px}
+  }
 </style>
 </head>
 <body>
@@ -1416,7 +1472,11 @@
    <h2>เลือกสินค้า</h2>
    <div class="rd-search"><input type="search" x-model="rdQuery" placeholder="ค้นหาสินค้าทั้งหมด เช่น F2520, แอร์ 12000, OLED" aria-label="ค้นหาสินค้าทั้งหมด" /></div>
   </div>
-  <div class="rd-cats" role="toolbar" aria-label="หมวดสินค้า">
+  <button type="button" class="rd-cat-picker" x-show="picker.category" @click="rdCatOpen = !rdCatOpen" :aria-expanded="rdCatOpen ? 'true' : 'false'">
+   <span class="rd-cat-picker-text"><small>หมวดสินค้า</small><b x-text="categoryDisplayName(picker.category)"></b></span>
+   <span class="rd-cat-picker-act" x-text="rdCatOpen ? 'ปิด' : 'เปลี่ยนหมวด'"></span>
+  </button>
+  <div class="rd-cats" :class="(rdCatOpen || !picker.category) ? 'rd-cats-open' : ''" role="toolbar" aria-label="หมวดสินค้า">
    <template x-for="cat in categoryList" :key="'rc-' + cat">
     <button type="button" class="rd-cat" :aria-pressed="picker.category === cat" @click="rdPickCategory(cat)" x-text="categoryDisplayName(cat)"></button>
    </template>
@@ -2293,8 +2353,8 @@ function lgCalculator() {
  compareB: { term: '5Y', serviceType: 'Visit', modelIndices: [] },
  cart: [],
  toast: { show: false, msg: '' },
- buildVersion: '2026.11.22-v2',
- summaryAudience: 'general',
+ buildVersion: '2026.11.23-v1',
+ summaryAudience: 'product',
  summaryAudienceLabel() {
  return {general:'แบบทั่วไป', credit:'แบบบัตรเครดิต', account:'แบบหักบัญชีอัตโนมัติ', product:'เฉพาะสินค้าและราคา'}[this.summaryAudience] || 'แบบทั่วไป';
  },
@@ -2378,6 +2438,7 @@ function lgCalculator() {
  rdTab: 'ranges',
  rdDetailTab: 'bills',
  rdQuery: '',
+ rdCatOpen: false,
  rdTiles() {
    const q = String(this.rdQuery || '').trim().toLowerCase();
    const cats = q ? this.categoryList : (this.picker.category ? [this.picker.category] : []);
@@ -2410,6 +2471,7 @@ function lgCalculator() {
  },
  rdPickCategory(cat) {
    this.rdQuery = '';
+   this.rdCatOpen = false;
    if (this.picker.category === cat) return;
    this.picker.category = cat;
    this.onCategoryChange();
